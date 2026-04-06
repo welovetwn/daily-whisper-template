@@ -1,0 +1,20 @@
+
+<h2>投稿一句話</h2>
+<p>投稿將同步到 Google Sheets，網站自動更新</p>
+<form id='form'>
+  <input placeholder='句子' id='text'><br>
+  <input placeholder='作者' id='author'><br>
+  <input placeholder='tags（用逗號分隔）' id='tags'><br>
+  <button type='submit'>送出</button>
+</form>
+<script>
+document.getElementById('form').onsubmit = e => {
+  e.preventDefault();
+  const data = {
+    text: text.value,
+    author: author.value,
+    tags: tags.value.split(',')
+  };
+  alert('請透過 Google Form 或 Sheets API 投稿：'+JSON.stringify(data));
+};
+</script>
