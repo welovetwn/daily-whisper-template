@@ -1,4 +1,3 @@
-
 # Daily Whisper Platform
 
 A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, favorites, and shareable images.
