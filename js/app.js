@@ -100,18 +100,49 @@ async function loadQuotes(){
   createSlides(quotes);
 }
 
-function createSlides(data){
-  const container=document.getElementById('container'); container.innerHTML='';
-  data.forEach(q=>{
-    const slide=document.createElement('div'); slide.className='slide';
-    const bg=document.createElement('div'); bg.className='bg'; bg.style.backgroundImage='url('+randomImg()+')';
-    const overlay=document.createElement('div'); overlay.className='overlay';
-    const content=document.createElement('div');
-    const quote=document.createElement('div'); quote.className='quote'; quote.innerText=q.text;
-    const author=document.createElement('div'); author.className='author'; author.innerText='― '+q.author;
-    const tags=document.createElement('div'); q.tags.forEach(t=>{const span=document.createElement('span'); span.className='tag'; span.innerText='#'+t; span.onclick=()=>filterTag(t); tags.appendChild(span);});
-    content.appendChild(quote); content.appendChild(author); content.appendChild(tags);
-    slide.appendChild(bg); slide.appendChild(overlay); slide.appendChild(content);
+function createSlides(data) {
+  const container = document.getElementById('container');
+  container.innerHTML = '';
+  data.forEach(q => {
+    const slide = document.createElement('div');
+    slide.className = 'slide';
+
+    const bg = document.createElement('div');
+    bg.className = 'bg';
+    bg.style.backgroundImage = 'url(' + randomImg() + ')';
+
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay';
+
+    // 這裡加上 class 'quote-container'
+    const content = document.createElement('div');
+    content.className = 'quote-container';
+
+    const quote = document.createElement('div');
+    quote.className = 'quote';
+    quote.innerText = q.text;
+
+    const author = document.createElement('div');
+    author.className = 'author';
+    author.innerText = '― ' + q.author;
+
+    const tags = document.createElement('div');
+    q.tags.forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'tag';
+      span.innerText = '#' + t;
+      span.onclick = () => filterTag(t);
+      tags.appendChild(span);
+    });
+
+    content.appendChild(quote);
+    content.appendChild(author);
+    content.appendChild(tags);
+
+    slide.appendChild(bg);
+    slide.appendChild(overlay);
+    slide.appendChild(content);
+
     container.appendChild(slide);
   });
   observe();
