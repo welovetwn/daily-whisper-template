@@ -124,7 +124,7 @@ function createSlides(data) {
 
     const author = document.createElement('div');
     author.className = 'author';
-    author.innerText = '― ' + q.author;
+    author.innerText =  q.author;
 
     const tags = document.createElement('div');
     q.tags.forEach(t => {
