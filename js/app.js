@@ -9,7 +9,7 @@ function randomImg(){ return images[Math.floor(Math.random()*images.length)]; }
 
 async function loadQuotes(){
   // Google Sheets JSON URL 替換成你的 Web App
-  const res = await fetch('https://script.google.com/macros/s/YOUR_WEB_APP_ID/exec');
+  const res = await fetch('https://script.google.com/macros/s/AKfycbxL0Lzb7unYrGsHqlKmXh4k0sR_odoRDL6PolfEGbVnW1ZHaQLeATkrLQNcPhS7sBMa/exec');
   quotes = await res.json();
   createSlides(quotes);
 }
