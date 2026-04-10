@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PWA Icon Generator</title>
+<style>
+body { font-family: sans-serif; padding: 20px; background: #222; color: #fff; }
+canvas { border: 1px solid #444; margin: 10px; }
+.download-btn { 
+  display: inline-block; 
+  padding: 10px 20px; 
+  background: #4CAF50; 
+  color: #fff; 
+  text-decoration: none; 
+  border-radius: 4px; 
+  margin: 10px;
+}
+</style>
+</head>
+<body>
+<h2>PWA 圖示生成器</h2>
+<p>在下方右鍵儲存圖片，或點擊下載按鈕：</p>
+
+<h3>192x192 (用於一般顯示)</h3>
+<canvas id="canvas192" width="192" height="192"></canvas>
+<br>
+<a id="download192" class="download-btn">下載 icon-192.png</a>
+
+<h3>512x512 (用於安裝畫面)</h3>
+<canvas id="canvas512" width="512" height="512"></canvas>
+<br>
+<a id="download512" class="download-btn">下載 icon-512.png</a>
+
+<script>
+function generateIcon(size, canvasId, downloadId) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  
+  // 黑色背景
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, size, size);
+  
+  // 圓角
+  ctx.globalCompositeOperation = 'destination-in';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, size, size, size * 0.2);
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+  
+  // 重新繪製黑色背景（因為裁剪）
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = size;
+  tempCanvas.height = size;
+  const tempCtx = tempCanvas.getContext('2d');
+  tempCtx.fillStyle = '#000000';
+  tempCtx.fillRect(0, 0, size, size);
+  
+  // 字母 W
+  tempCtx.fillStyle = '#ffffff';
+  tempCtx.font = `bold ${size * 0.5}px serif`;
+  tempCtx.textAlign = 'center';
+  tempCtx.textBaseline = 'middle';
+  tempCtx.fillText('W', size / 2, size / 2 + size * 0.05);
+  
+  // 小圓點
+  tempCtx.beginPath();
+  tempCtx.arc(size / 2, size * 0.3, size * 0.04, 0, Math.PI * 2);
+  tempCtx.fillStyle = 'rgba(255,255,255,0.5)';
+  tempCtx.fill();
+  
+  // 應用圓角蒙版
+  ctx.drawImage(tempCanvas, 0, 0);
+  
+  // 設定下載連結
+  const link = document.getElementById(downloadId);
+  link.href = canvas.toDataURL('image/png');
+  link.download = `icon-${size}.png`;
+}
+
+// 生成兩種尺寸
+generateIcon(192, 'canvas192', 'download192');
+generateIcon(512, 'canvas512', 'download512');
+</script>
+</body>
+</html>

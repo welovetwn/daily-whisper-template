@@ -72,6 +72,22 @@ A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, fav
   - Error handling with user-friendly messages
 - **Impact**: Users now have clear visual feedback when adding/removing favorites
 
+### Fixed: PWA Icons & Installation (Issue #5)
+- **Issue**: PWA installation not working due to missing icon files and incomplete service worker
+- **Fix**: 
+  - Updated `manifest.json` with proper PWA configuration:
+    - Added required icon sizes (192x192 and 512x512)
+    - Added `purpose: "any maskable"` for adaptive icons
+    - Added `orientation`, `scope`, and `description`
+  - Created `assets/icon-generator.html` tool for generating icons
+  - Enhanced `sw.js` with complete service worker functionality:
+    - Added all necessary files to cache list
+    - Added `activate` event for cache cleanup
+    - Added offline fallback handling
+  - Created `assets/README.md` with setup instructions
+- **Setup Required**: Generate icon files using `assets/icon-generator.html`
+- **Impact**: Full PWA support with install prompt and offline functionality
+
 ## Deploy
 
 ### 部署前檢查清單
@@ -79,6 +95,8 @@ A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, fav
 - [ ] 確認 `submit.html` 中的 `SUBMIT_API_URL` 已正確設定（與上面相同）
 - [ ] 確認 Google Apps Script 已部署並支援 `doGet` 和 `doPost`
 - [ ] 確認 CORS 設定已完成（參考 `google-apps-script-submit.md`）
+- [ ] 確認 PWA 圖示已產生（參考 `assets/icon-generator.html`）
+- [ ] 確認 `assets/icon-192.png` 和 `assets/icon-512.png` 存在
 
 ### 部署步驟
 1. Push 到 GitHub：`git push origin main`
