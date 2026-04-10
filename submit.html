@@ -48,13 +48,18 @@ document.getElementById('form').onsubmit = async (e) => {
   submitBtn.disabled = true;
 
   try {
+    // 使用 FormData 格式（避免 CORS preflight）
+    const formData = new URLSearchParams();
+    formData.append('text', text);
+    formData.append('author', author);
+    formData.append('tags', tags.join(', '));
+    
     const response = await fetch(SUBMIT_API_URL, {
       method: 'POST',
-      body: JSON.stringify({
-        text: text,
-        author: author,
-        tags: tags
-      })
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData.toString()
     });
 
     const result = await response.json();
