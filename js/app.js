@@ -17,79 +17,79 @@ const images = [
   "https://images.pexels.com/photos/33279929/pexels-photo-33279929.jpeg",
   "https://images.pexels.com/photos/164008/pexels-photo-164008.jpeg",
   "https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg",
-  "https://images.pexels.com/photos/115634/pexels-photo-115634.jpeg",
+  "https://images.pexels.com/photos/32076508/pexels-photo-32076508.jpeg",
   "https://images.pexels.com/photos/6406918/pexels-photo-6406918.jpeg",
   "https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg",
 
   // Ocean & Beach
   "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-  "https://images.unsplash.com/photo-1493558103817-58b2924bce98",
+  "https://images.pexels.com/photos/12987464/pexels-photo-12987464.jpeg",
   "https://images.pexels.com/photos/248797/pexels-photo-248797.jpeg",
   "https://images.pexels.com/photos/533923/pexels-photo-533923.jpeg",
-  "https://images.pexels.com/photos/1450357/pexels-photo-1450357.jpeg",
-  "https://images.pexels.com/photos/187962/pexels-photo-187962.jpeg",
+  "https://images.pexels.com/photos/33374145/pexels-photo-33374145.jpeg",
+  "https://images.pexels.com/photos/12925698/pexels-photo-12925698.jpeg",
   "https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg",
   "https://images.pexels.com/photos/457882/pexels-photo-457882.jpeg",
 
   // Sunset & Sunrise
-  "https://images.unsplash.com/photo-1518837695005-2083093ee35b",
+  "https://images.pexels.com/photos/728841/pexels-photo-728841.jpeg",
   "https://images.pexels.com/photos/34021102/pexels-photo-34021102.jpeg",
   "https://images.pexels.com/photos/462353/pexels-photo-462353.jpeg",
   "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg",
-  "https://images.pexels.com/photos/287158/pexels-photo-287158.jpeg",
-  "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg",
-  "https://images.pexels.com/photos/35981637/pexels-photo-35981637.jpeg",
+  "https://images.pexels.com/photos/35461529/pexels-photo-35461529.jpeg",
+  "https://images.pexels.com/photos/30685474/pexels-photo-30685474.jpeg",
+  "https://images.pexels.com/photos/19611627/pexels-photo-19611627.jpeg",
   "https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg",
 
   // Scenery & Nature
   "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
   "https://images.pexels.com/photos/34625026/pexels-photo-34625026.jpeg",
-  "https://images.unsplash.com/photo-1500534623283-312aade485b7",
-  "https://images.pexels.com/photos/27022164/pexels-photo-27022164.jpeg",
+  "https://images.pexels.com/photos/10731758/pexels-photo-10731758.jpeg",
+  "https://images.pexels.com/photos/29686303/pexels-photo-29686303.jpeg",
   "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg",
   "https://images.pexels.com/photos/672142/pexels-photo-672142.jpeg",
   "https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg",
-  "https://images.pexels.com/photos/417413/pexels-photo-417413.jpeg",
+  "https://images.pexels.com/photos/36850515/pexels-photo-36850515.jpeg",
 
   // Clouds & Skies
-  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+  "https://images.pexels.com/photos/246230/pexels-photo-246230.png",
   "https://images.unsplash.com/photo-1448375240586-882707db888b",
   "https://images.pexels.com/photos/9854061/pexels-photo-9854061.jpeg",
-  "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg",
+  "https://images.pexels.com/photos/9923779/pexels-photo-9923779.jpeg",
   "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg",
-  "https://images.pexels.com/photos/1549277/pexels-photo-1549277.jpeg",
+  "https://images.pexels.com/photos/34210398/pexels-photo-34210398.jpeg",
   "https://images.pexels.com/photos/13768451/pexels-photo-13768451.jpeg",
-  "https://images.pexels.com/photos/1287147/pexels-photo-1287147.jpeg",
+  "https://images.pexels.com/photos/29413967/pexels-photo-29413967.jpeg",
 
   // Mountains Extended
-  "https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg",
+  "https://images.pexels.com/photos/33130105/pexels-photo-33130105.jpeg",
   "https://images.pexels.com/photos/14672474/pexels-photo-14672474.jpeg",
-  "https://images.pexels.com/photos/215687/pexels-photo-215687.jpeg",
+  "https://images.pexels.com/photos/16654642/pexels-photo-16654642.jpeg",
   "https://images.pexels.com/photos/35900181/pexels-photo-35900181.jpeg",
   "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg",
   "https://images.pexels.com/photos/422088/pexels-photo-422088.jpeg",
   "https://images.pexels.com/photos/17881053/pexels-photo-17881053.jpeg",
-  "https://images.pexels.com/photos/277667/pexels-photo-277667.jpeg",
+  "https://images.pexels.com/photos/20077185/pexels-photo-20077185.jpeg",
 
   // More scenic variety
   "https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg",
   "https://images.pexels.com/photos/1410232/pexels-photo-1410232.jpeg",
   "https://images.pexels.com/photos/29222109/pexels-photo-29222109.jpeg",
-  "https://images.pexels.com/photos/1888908/pexels-photo-1888908.jpeg",
+  "https://images.pexels.com/photos/34289149/pexels-photo-34289149.jpeg",
   "https://images.unsplash.com/photo-1775049618716-b6edef32daff",
   "https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg",
   "https://images.pexels.com/photos/347140/pexels-photo-347140.jpeg",
   "https://images.pexels.com/photos/355241/pexels-photo-355241.jpeg",
 
   // Even more landscapes
-  "https://images.pexels.com/photos/17881053/pexels-photo-17881053.jpeg",
+  "https://images.pexels.com/photos/8787041/pexels-photo-8787041.jpeg",
   "https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg",
   "https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg",
-  "https://images.pexels.com/photos/34625026/pexels-photo-34625026.jpeg",
+  "https://images.pexels.com/photos/31986352/pexels-photo-31986352.jpeg",
   "https://images.pexels.com/photos/1770809/pexels-photo-1770809.jpeg",
   "https://images.pexels.com/photos/7694761/pexels-photo-7694761.jpeg",
-  "https://images.pexels.com/photos/8544386/pexels-photo-8544386.jpeg",
-  "https://images.pexels.com/photos/302769/pexels-photo-302769.jpeg"
+  "https://images.pexels.com/photos/9957253/pexels-photo-9957253.jpeg",
+  "https://images.pexels.com/photos/32392574/pexels-photo-32392574.jpeg"
 ];
 function randomImg(){ return images[Math.floor(Math.random()*images.length)]; }
 
@@ -174,9 +174,16 @@ function shareImage(){
   const canvas = document.createElement('canvas');
   canvas.width = 1080; canvas.height = 1920;
   const ctx = canvas.getContext('2d');
+
+  // 取得當前幻燈片的背景圖片
+  const slides = document.querySelectorAll('.slide');
+  const currentSlide = slides[currentIndex];
+  const bgElement = currentSlide.querySelector('.bg');
+  const bgUrl = bgElement.style.backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+
   const img = new Image();
   img.crossOrigin = 'anonymous';
-  img.src = randomImg();
+  img.src = bgUrl;
   img.onload = ()=>{
     ctx.drawImage(img,0,0,canvas.width,canvas.height);
     const grad = ctx.createLinearGradient(0,0,0,canvas.height);
@@ -197,13 +204,33 @@ function shareImage(){
 }
 
 function wrapText(ctx, text, x, y, maxWidth, lineHeight){
-  const words = text.split(' '); let line = ''; let lines=[];
-  for(let n=0;n<words.length;n++){
-    const testLine=line+words[n]+' '; const metrics=ctx.measureText(testLine); const testWidth=metrics.width;
-    if(testWidth>maxWidth&&n>0){ lines.push(line); line=words[n]+' '; } else { line=testLine; }
+  // 先按 Google Sheets 的換行符分割
+  const paragraphs = text.split('\n');
+  let allLines = [];
+
+  paragraphs.forEach(paragraph => {
+    const chars = paragraph.split('');
+    let line = '';
+    for(let n=0; n<chars.length; n++){
+      const testLine = line + chars[n];
+      const metrics = ctx.measureText(testLine);
+      const testWidth = metrics.width;
+      if(testWidth > maxWidth && n > 0){
+        allLines.push(line);
+        line = chars[n];
+      } else {
+        line = testLine;
+      }
+    }
+    allLines.push(line);
+  });
+
+  // 垂直置中調整起始 Y 位置
+  const totalHeight = allLines.length * lineHeight;
+  const startY = y - totalHeight / 2 + lineHeight / 2;
+  for(let i=0; i<allLines.length; i++){
+    ctx.fillText(allLines[i], x, startY + i*lineHeight);
   }
-  lines.push(line);
-  for(let i=0;i<lines.length;i++){ ctx.fillText(lines[i],x,y+i*lineHeight); }
 }
 
 if('serviceWorker' in navigator){ navigator.serviceWorker.register('/sw.js'); }

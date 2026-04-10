@@ -1,22 +1,51 @@
-
 <!DOCTYPE html>
-<html>
+<html lang='zh-Hant'>
 <head>
 <meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>我的收藏 - Daily Whisper</title>
 <link rel='stylesheet' href='css/style.css'>
+<style>
+body { padding: 20px; background: #111; }
+h2 { padding: 20px; margin-top: 40px; }
+.back { position: fixed; top: 20px; left: 20px; color: #fff; text-decoration: none; z-index: 100; }
+.fav-item { padding: 20px; border-bottom: 1px solid #333; }
+.remove-btn { color: #f66; cursor: pointer; float: right; }
+</style>
 </head>
 <body>
-<h2 style='padding:20px'>我的收藏</h2>
+<a href='index.html' class='back'>← 返回</a>
+<h2>我的收藏</h2>
 <div id='list'></div>
 <script>
-const list=document.getElementById('list');
-const favs=JSON.parse(localStorage.getItem('fav')||'[]');
-favs.forEach(q=>{
-  const div=document.createElement('div');
-  div.style.padding='20px';
-  div.innerHTML=`${q.text}<br><small>― ${q.author}</small>`;
-  list.appendChild(div);
-});
+const list = document.getElementById('list');
+let favs = JSON.parse(localStorage.getItem('fav') || '[]');
+
+function renderFavs() {
+  list.innerHTML = '';
+  if (favs.length === 0) {
+    list.innerHTML = '<div style="padding:40px;text-align:center;color:#666">尚無收藏</div>';
+    return;
+  }
+  favs.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'fav-item';
+    div.innerHTML = `
+      <span class="remove-btn" onclick="removeFav(${idx})">✕</span>
+      ${q.text.replace(/\n/g, '<br>')}<br>
+      <small>― ${q.author}</small>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function removeFav(idx) {
+  favs.splice(idx, 1);
+  localStorage.setItem('fav', JSON.stringify(favs));
+  renderFavs();
+}
+
+renderFavs();
 </script>
 </body>
 </html>

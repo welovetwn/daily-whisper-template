@@ -1,20 +1,81 @@
-
+<!DOCTYPE html>
+<html lang='zh-Hant'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>投稿 - Daily Whisper</title>
+<link rel='stylesheet' href='css/style.css'>
+<style>
+body { padding: 20px; background: #111; }
+form { max-width: 400px; margin: 0 auto; }
+input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #444; background: #222; color: #fff; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
+textarea { resize: vertical; }
+button { width: 100%; padding: 12px; background: #fff; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+h2, p { text-align: center; }
+.back { position: fixed; top: 20px; left: 20px; color: #fff; text-decoration: none; }
+</style>
+</head>
+<body>
+<a href='index.html' class='back'>← 返回</a>
 <h2>投稿一句話</h2>
 <p>投稿將同步到 Google Sheets，網站自動更新</p>
 <form id='form'>
-  <input placeholder='句子' id='text'><br>
-  <input placeholder='作者' id='author'><br>
+  <textarea placeholder='句子（支援多行）' id='text' rows='4' required></textarea><br>
+  <input placeholder='作者' id='author' required><br>
   <input placeholder='tags（用逗號分隔）' id='tags'><br>
   <button type='submit'>送出</button>
 </form>
 <script>
-document.getElementById('form').onsubmit = e => {
+// Google Apps Script Web App URL - 請替換成你的部署 URL
+const SUBMIT_API_URL = 'https://script.google.com/macros/s/AKfycbxL0Lzb7unYrGsHqlKmXh4k0sR_odoRDL6PolfEGbVnW1ZHaQLeATkrLQNcPhS7sBMa/exec';
+
+document.getElementById('form').onsubmit = async (e) => {
   e.preventDefault();
-  const data = {
-    text: text.value,
-    author: author.value,
-    tags: tags.value.split(',')
-  };
-  alert('請透過 Google Form 或 Sheets API 投稿：'+JSON.stringify(data));
+  const submitBtn = document.querySelector('button[type="submit"]');
+  const originalText = submitBtn.textContent;
+
+  const text = document.getElementById('text').value;
+  const author = document.getElementById('author').value;
+  const tags = document.getElementById('tags').value.split(',').filter(t => t.trim());
+
+  // 檢查 API URL 是否已設定
+  if (SUBMIT_API_URL.includes('YOUR_SCRIPT_ID')) {
+    alert('請先設定 SUBMIT_API_URL：\n編輯 submit.html 檔案，將 SUBMIT_API_URL 替換為你的 Google Apps Script Web App URL');
+    return;
+  }
+
+  submitBtn.textContent = '送出中...';
+  submitBtn.disabled = true;
+
+  try {
+    const response = await fetch(SUBMIT_API_URL, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text: text,
+        author: author,
+        tags: tags
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert('✓ 投稿成功！\n\n句子：' + text.substring(0, 50) + (text.length > 50 ? '...' : '') + '\n作者：' + author);
+      document.getElementById('form').reset();
+    } else {
+      alert('✗ 投稿失敗：' + (result.error || '未知錯誤'));
+    }
+  } catch (error) {
+    alert('✗ 網路錯誤：' + error.message + '\n\n請確認：\n1. Google Apps Script 已正確部署\n2. SUBMIT_API_URL 設定正確\n3. CORS 設定已完成（參考 google-apps-script-submit.md）');
+  } finally {
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  }
 };
 </script>
+</body>
+</html>
