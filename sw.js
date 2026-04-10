@@ -1,14 +1,14 @@
 
 const CACHE_NAME='daily-whisper-v2';
 const urlsToCache=[
-  '/',
-  '/index.html',
-  '/css/style.css',
-  '/js/app.js',
-  '/manifest.json',
-  '/assets/icon-192.png',
-  '/favorites.html',
-  '/submit.html'
+  './',
+  'index.html',
+  'css/style.css',
+  'js/app.js',
+  'manifest.json',
+  'assets/icon-192.png',
+  'favorites.html',
+  'submit.html'
 ];
 
 self.addEventListener('install', e=>{
