@@ -368,7 +368,7 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight){
 }
 
 // Push 通知訂閱管理
-const PUSH_API_URL = 'https://script.google.com/macros/s/AKfycby_73WaISHrq2ij7IdR_90Z9UxLi-ttQOL-_urt29nyuPnnAPIT4k4yeDUYD-WTV0WH/exec';
+const PUSH_API_URL = 'https://script.google.com/macros/s/AKfycbw5m7P3QTMnLdt1gl0cTDIrqizXx99nzjg-JMfNkWgo80GiX2Z24SbjKhZiDnd5S782/exec';
 
 async function togglePush(){
   console.log('[Push] togglePush called');
