@@ -466,7 +466,11 @@ function urlBase64ToUint8Array(base64String){
 }
 
 if('serviceWorker' in navigator){ 
-  navigator.serviceWorker.register('/sw.js');
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    console.log('[SW] Registered:', reg.scope);
+  }).catch(err => {
+    console.error('[SW] Registration failed:', err);
+  });
   checkPushStatus();
 }
 window.onload=loadQuotes;
