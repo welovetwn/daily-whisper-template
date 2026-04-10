@@ -51,6 +51,14 @@ A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, fav
 - **Setup Required**: Follow `google-apps-script-submit.md` to configure the POST endpoint
 - **Impact**: Complete end-to-end submission workflow without leaving the website
 
+### Fixed: Error Handling & Stability (Issue #3)
+- **Issue**: Missing error handling caused silent failures when network requests failed
+- **Fix**: Added comprehensive error handling in `js/app.js`:
+  - `loadQuotes()`: Added try/catch with user-friendly error display and reload button
+  - `shareImage()`: Added validation checks for quotes, slides, background elements; added `img.onerror` handler
+  - `createSlides()`: Added data validation (array check, empty check, object validation)
+- **Impact**: Better user experience with clear error messages and graceful degradation
+
 ## Deploy
 
 ### 部署前檢查清單

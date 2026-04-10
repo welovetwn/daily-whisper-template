@@ -94,16 +94,56 @@ const images = [
 function randomImg(){ return images[Math.floor(Math.random()*images.length)]; }
 
 async function loadQuotes(){
-  // Google Sheets JSON URL 替換成你的 Web App
-  const res = await fetch('https://script.google.com/macros/s/AKfycby_73WaISHrq2ij7IdR_90Z9UxLi-ttQOL-_urt29nyuPnnAPIT4k4yeDUYD-WTV0WH/exec');
-  quotes = await res.json();
-  createSlides(quotes);
+  try {
+    // Google Sheets JSON URL 替換成你的 Web App
+    const res = await fetch('https://script.google.com/macros/s/AKfycby_73WaISHrq2ij7IdR_90Z9UxLi-ttQOL-_urt29nyuPnnAPIT4k4yeDUYD-WTV0WH/exec');
+    if (!res.ok) {
+      throw new Error('Network response was not ok: ' + res.status);
+    }
+    quotes = await res.json();
+    if (!Array.isArray(quotes) || quotes.length === 0) {
+      throw new Error('No quotes data received');
+    }
+    createSlides(quotes);
+  } catch (error) {
+    console.error('Failed to load quotes:', error);
+    const container = document.getElementById('container');
+    container.innerHTML = `
+      <div style="padding:40px;text-align:center;color:#fff">
+        <p>無法載入語錄資料</p>
+        <p style="color:#666;font-size:14px">${error.message}</p>
+        <button onclick="location.reload()" style="margin-top:20px;padding:10px 20px;background:#fff;color:#000;border:none;border-radius:4px;cursor:pointer">重新載入</button>
+      </div>
+    `;
+  }
 }
 
 function createSlides(data) {
   const container = document.getElementById('container');
   container.innerHTML = '';
+
+  // 資料驗證
+  if (!Array.isArray(data)) {
+    console.error('createSlides: data is not an array', data);
+    container.innerHTML = '<div style="padding:40px;text-align:center;color:#fff"><p>資料格式錯誤</p></div>';
+    return;
+  }
+
+  if (data.length === 0) {
+    container.innerHTML = '<div style="padding:40px;text-align:center;color:#fff"><p>沒有可顯示的語錄</p></div>';
+    return;
+  }
+
   data.forEach(q => {
+    // 驗證每個語錄物件
+    if (!q || typeof q !== 'object') {
+      console.warn('createSlides: invalid quote object', q);
+      return;
+    }
+    if (!q.text) {
+      console.warn('createSlides: quote missing text', q);
+      return;
+    }
     const slide = document.createElement('div');
     slide.className = 'slide';
 
@@ -171,6 +211,11 @@ function nextSlide(){ document.querySelector('.container').scrollBy({top:window.
 // IG Story 分享
 function shareImage(){
   const q = quotes[currentIndex];
+  if (!q) {
+    alert('請先選擇一個語錄');
+    return;
+  }
+
   const canvas = document.createElement('canvas');
   canvas.width = 1080; canvas.height = 1920;
   const ctx = canvas.getContext('2d');
@@ -178,12 +223,31 @@ function shareImage(){
   // 取得當前幻燈片的背景圖片
   const slides = document.querySelectorAll('.slide');
   const currentSlide = slides[currentIndex];
+  if (!currentSlide) {
+    alert('無法取得當前幻燈片');
+    return;
+  }
+
   const bgElement = currentSlide.querySelector('.bg');
+  if (!bgElement) {
+    alert('無法取得背景元素');
+    return;
+  }
+
   const bgUrl = bgElement.style.backgroundImage.replace(/^url\(["']?/, '').replace(/["']?\)$/, '');
+  if (!bgUrl || bgUrl === 'none') {
+    alert('無法取得背景圖片');
+    return;
+  }
 
   const img = new Image();
   img.crossOrigin = 'anonymous';
   img.src = bgUrl;
+
+  img.onerror = () => {
+    alert('圖片載入失敗，請稍後再試');
+  };
+
   img.onload = ()=>{
     ctx.drawImage(img,0,0,canvas.width,canvas.height);
     const grad = ctx.createLinearGradient(0,0,0,canvas.height);
