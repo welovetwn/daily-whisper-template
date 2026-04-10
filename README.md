@@ -59,6 +59,19 @@ A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, fav
   - `createSlides()`: Added data validation (array check, empty check, object validation)
 - **Impact**: Better user experience with clear error messages and graceful degradation
 
+### Fixed: Favorites Enhancement (Issue #4)
+- **Issue**: Favorite toggle had no visual feedback or status indication
+- **Fix**: Added comprehensive favorites improvements in `js/app.js`:
+  - Added `showToast()` function for non-intrusive status messages (success/error)
+  - Enhanced `toggleFavorite()` with try/catch error handling and toast notifications
+  - Added `updateFavoriteButton()` to visually indicate favorite status (❤️/🤍)
+  - Integrated `updateFavoriteButton()` into slide observer for real-time updates
+- **Features**:
+  - Toast notification shows "已加入收藏" or "已從收藏移除"
+  - Favorite button changes icon based on current slide's favorite status
+  - Error handling with user-friendly messages
+- **Impact**: Users now have clear visual feedback when adding/removing favorites
+
 ## Deploy
 
 ### 部署前檢查清單

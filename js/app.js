@@ -192,7 +192,11 @@ function observe(){
   const slides=document.querySelectorAll('.slide');
   const io=new IntersectionObserver(entries=>{
     entries.forEach(e=>{
-      if(e.isIntersecting){ e.target.classList.add('active'); currentIndex=[...slides].indexOf(e.target);}
+      if(e.isIntersecting){ 
+        e.target.classList.add('active'); 
+        currentIndex=[...slides].indexOf(e.target);
+        updateFavoriteButton();
+      }
     });
   },{threshold:0.6});
   slides.forEach(s=>io.observe(s));
@@ -200,10 +204,76 @@ function observe(){
 
 function filterTag(tag){ createSlides(quotes.filter(q=>q.tags.includes(tag))); }
 
+// 顯示 Toast 提示
+function showToast(message, isSuccess = true) {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    background: ${isSuccess ? '#4CAF50' : '#f44336'};
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s;
+  `;
+  document.body.appendChild(toast);
+  
+  // 淡入
+  setTimeout(() => toast.style.opacity = '1', 10);
+  
+  // 3秒後淡出移除
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
 function toggleFavorite(){
-  const q=quotes[currentIndex]; let favs=JSON.parse(localStorage.getItem('fav')||'[]');
-  if(favs.find(f=>f.text===q.text)){ favs=favs.filter(f=>f.text!==q.text);} else {favs.push(q);}
-  localStorage.setItem('fav',JSON.stringify(favs));
+  try {
+    const q = quotes[currentIndex];
+    if (!q) {
+      showToast('請先選擇一個語錄', false);
+      return;
+    }
+    
+    let favs = JSON.parse(localStorage.getItem('fav') || '[]');
+    const isAlreadyFav = favs.find(f => f.text === q.text);
+    
+    if (isAlreadyFav) {
+      favs = favs.filter(f => f.text !== q.text);
+      showToast('✓ 已從收藏移除');
+    } else {
+      favs.push(q);
+      showToast('✓ 已加入收藏');
+    }
+    
+    localStorage.setItem('fav', JSON.stringify(favs));
+    updateFavoriteButton();
+  } catch (error) {
+    console.error('toggleFavorite error:', error);
+    showToast('收藏操作失敗，請稍後再試', false);
+  }
+}
+
+// 更新收藏按鈕的視覺狀態
+function updateFavoriteButton() {
+  const q = quotes[currentIndex];
+  if (!q) return;
+  
+  const favBtn = document.querySelector('.btn[onclick="toggleFavorite()"]');
+  if (!favBtn) return;
+  
+  const favs = JSON.parse(localStorage.getItem('fav') || '[]');
+  const isFav = favs.find(f => f.text === q.text);
+  
+  favBtn.textContent = isFav ? '❤️' : '🤍';
+  favBtn.style.opacity = isFav ? '1' : '0.6';
 }
 
 function nextSlide(){ document.querySelector('.container').scrollBy({top:window.innerHeight,behavior:'smooth'});}
