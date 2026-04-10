@@ -371,27 +371,39 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight){
 const PUSH_API_URL = 'https://script.google.com/macros/s/AKfycby_73WaISHrq2ij7IdR_90Z9UxLi-ttQOL-_urt29nyuPnnAPIT4k4yeDUYD-WTV0WH/exec';
 
 async function togglePush(){
+  console.log('[Push] togglePush called');
+  
   if(!('Notification' in window)){
+    console.error('[Push] Notification API not supported');
     showToast('您的瀏覽器不支援通知功能', 'error');
     return;
   }
   
-  const registration = await navigator.serviceWorker.ready;
-  const subscription = await registration.pushManager.getSubscription();
+  console.log('[Push] Notification API supported');
   
-  if(subscription){
-    // 取消訂閱
-    await subscription.unsubscribe();
-    localStorage.removeItem('pushEnabled');
-    updatePushButton(false);
-    showToast('已關閉每日推送');
-  } else {
-    // 請求權限並訂閱
-    const permission = await Notification.requestPermission();
-    if(permission!=='granted'){
-      showToast('請允許通知權限以接收每日語錄', 'error');
-      return;
-    }
+  try{
+    const registration = await navigator.serviceWorker.ready;
+    console.log('[Push] Service Worker ready:', registration.scope);
+    
+    const subscription = await registration.pushManager.getSubscription();
+    console.log('[Push] Current subscription:', subscription);
+    
+    if(subscription){
+      // 取消訂閱
+      await subscription.unsubscribe();
+      localStorage.removeItem('pushEnabled');
+      updatePushButton(false);
+      showToast('已關閉每日推送');
+    } else {
+      // 請求權限並訂閱
+      console.log('[Push] Requesting notification permission...');
+      const permission = await Notification.requestPermission();
+      console.log('[Push] Permission result:', permission);
+      
+      if(permission!=='granted'){
+        showToast('請允許通知權限以接收每日語錄', 'error');
+        return;
+      }
     
     // 這裡需要 VAPID 公鑰 - 暫時使用佔位符
     // 實際部署時需要從 Apps Script 取得
@@ -419,6 +431,10 @@ async function togglePush(){
       showToast('訂閱失敗：' + e.message, 'error');
       console.error('Push subscription error:', e);
     }
+    }
+  } catch(err){
+    console.error('[Push] togglePush error:', err);
+    showToast('推送功能錯誤：' + err.message, 'error');
   }
 }
 
