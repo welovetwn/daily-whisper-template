@@ -1,17 +1,16 @@
-# Google Apps Script 投稿接收端點設定
+/**
+ * Daily Whisper - Google Apps Script 完整程式碼
+ * 
+ * 使用方式：
+ * 1. 複製此檔案全部內容 (Ctrl+A, Ctrl+C)
+ * 2. 前往 Google Apps Script (https://script.google.com)
+ * 3. 開啟你的 QuotesAPI 專案
+ * 4. 清空現有程式碼，貼上此內容 (Ctrl+A, Ctrl+V)
+ * 5. 儲存 (Ctrl+S)
+ * 6. 部署 → 管理部署 → 編輯 → 新版本 → 部署
+ * 7. 重新授權（務必點擊授權連結）
+ */
 
-## 問題排除：CORS 錯誤
-
-如果你遇到 `CORS Missing Allow Origin` 錯誤，請確認以下設定：
-
-### 正確的 Apps Script 程式碼
-
-**重要**: Google Apps Script 的 `ContentService` **不支援** `setHeaders()` 方法！
-CORS 必須透過回傳特定的輸出格式來處理。
-
-請將你的 Apps Script **全部** 改為以下程式碼：
-
-```javascript
 // 主要入口 - 自動分派 GET/POST/OPTIONS
 function doGet(e) {
   return handleRequest(e, 'GET');
@@ -82,39 +81,3 @@ function handleRequest(e, method) {
     }
   }
 }
-```
-
-## 部署設定檢查清單
-
-### 1. 部署權限設定（**重要**）
-部署時必須選擇：
-- **執行應用程式的身分**: `我` (你的 Google 帳號)
-- **誰有權限存取**: `任何人（包含匿名使用者）`
-
-### 2. 重新部署
-修改程式碼後必須：
-1. 儲存 (Ctrl+S)
-2. 部署 → 管理部署 → 編輯 → 新版本 → 部署
-3. **重新授權**（這是必須的！）
-
-### 3. 測試
-部署完成後，你的 Web App URL 同時支援：
-- `GET` - 取得所有語錄
-- `POST` - 投稿新語錄
-- `OPTIONS` - CORS 預檢
-
-## 注意事項
-
-1. **CORS 問題**: Apps Script Web App 預設支援跨域，不需要額外設定 setHeaders
-2. **重新授權**: 每次修改後重新部署都必須重新授權
-3. **每日限制**: Google Apps Script 有每日執行配額
-4. **資料驗證**: 建議在 Sheets 中設定資料驗證規則
-
-## 前端整合
-
-前端 `submit.html` 會使用 `fetch()` 發送 POST 請求。
-
-如果 CORS 問題持續，請檢查瀏灠器開發者工具 → Network 分頁，確認：
-1. 請求 URL 是否正確
-2. 是否有 302 重定向（這會導致 CORS 失敗）
-3. 回應狀態碼是否為 200

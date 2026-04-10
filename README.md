@@ -67,4 +67,5 @@ A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, fav
 
 ### 相關文件
 - `google-sheets-sync.md` - Google Sheets 讀取設定教學
-- `google-apps-script-submit.md` - Google Sheets 投稿接收設定教學
+- `google-apps-script-submit.md` - Google Sheets 投稿接收設定教學（詳細說明）
+- `apps-script-code.js` - **Google Apps Script 完整程式碼，直接複製貼上使用**
