@@ -14,8 +14,8 @@
  */
 
 // ==================== 設定區 ====================
-const VAPID_PRIVATE_KEY = '你的Private Key貼這裡';
-const VAPID_PUBLIC_KEY = '你的Public Key貼這裡';
+const VAPID_PRIVATE_KEY = '8svRRpYpXbQb-kTassxft2VywrfvpOXat8UW8_3TM54';
+const VAPID_PUBLIC_KEY = 'BLq1lbKiZZKTyRD9hpPI-pw43n1pTS_azcTZCRYdMSzKS2S63cvMk1fx65b2W4M9xsMTHyXrfoT902sOLXo_hNs';
 const VAPID_SUBJECT = 'mailto:你的email@example.com';
 
 // ==================== doGet - 讀取語錄 ====================

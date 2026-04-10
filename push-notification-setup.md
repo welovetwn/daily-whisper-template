@@ -14,19 +14,36 @@ Web Push 通知需要以下元件：
 
 ### Step 1: 產生 VAPID 金鑰
 
-使用線上工具產生金鑰對：
+VAPID 金鑰需要使用 **ECDSA P-256** 演算法產生，無法在瀏覽器中直接生成。
+
+#### 方法 A: 使用 Node.js (推薦)
+
 ```bash
-# 使用 Node.js 產生
+# 安裝 web-push 工具
+npm install -g web-push
+
+# 產生金鑰對
+web-push generate-vapid-keys
+```
+
+或直接使用 npx：
+```bash
 npx web-push generate-vapid-keys
 ```
 
-或使用線上工具：https://vapidkeys.com/
+#### 方法 B: 使用線上工具
 
-會得到：
+前往 https://vapidkeys.com/ 產生金鑰對
+
+#### 正確的金鑰格式
+
+會得到類似以下的結果：
 ```
-Public Key:  BFx... (用於前端)
-Private Key: cRm... (用於 Apps Script)
+Public Key:  BBLOcRXNhKGMnA4e54qP9T3b3vUf7Wq6QxYz8AbCdEfGhIjKlMnOpQrStUvWxYz1234567890abcdefABCDEF1234567890ab (約 86-88 字符)
+Private Key:  cRm5tYuPqRsTuVwXyZaBcDeFgHiJkLmNoPqRsTuVwXyZaBcDeFgHiJk (約 43 字符)
 ```
+
+**重要**：公鑰必須以 `B` 開頭，長度約 86-88 字符。如果只有 43 字符，表示使用了錯誤的演算法！
 
 ---
 

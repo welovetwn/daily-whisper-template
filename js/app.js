@@ -381,9 +381,22 @@ async function togglePush(){
   
   console.log('[Push] Notification API supported');
   
+  // 等待 Service Worker 準備就緒（最多 10 秒）
+  let registration;
   try{
-    const registration = await navigator.serviceWorker.ready;
+    console.log('[Push] Waiting for Service Worker...');
+    registration = await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Service Worker timeout')), 10000))
+    ]);
     console.log('[Push] Service Worker ready:', registration.scope);
+  } catch(swErr){
+    console.error('[Push] Service Worker not ready:', swErr);
+    showToast('Service Worker 尚未準備就緒，請重新整理頁面後再試', 'error');
+    return;
+  }
+  
+  try{
     
     const subscription = await registration.pushManager.getSubscription();
     console.log('[Push] Current subscription:', subscription);
@@ -405,9 +418,8 @@ async function togglePush(){
         return;
       }
     
-    // 這裡需要 VAPID 公鑰 - 暫時使用佔位符
-    // 實際部署時需要從 Apps Script 取得
-    const vapidPublicKey = '6uzMH2XXja529Rh8nyxKU1cfrf_TtNLRyaNLjrpOEVU';
+    // VAPID 公鑰 - 用於推送通知訂閱
+    const vapidPublicKey = 'BLq1lbKiZZKTyRD9hpPI-pw43n1pTS_azcTZCRYdMSzKS2S63cvMk1fx65b2W4M9xsMTHyXrfoT902sOLXo_hNs';
     
     try{
       const newSubscription = await registration.pushManager.subscribe({
