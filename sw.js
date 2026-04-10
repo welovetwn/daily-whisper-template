@@ -44,3 +44,36 @@ self.addEventListener('fetch', e=>{
     })
   );
 });
+
+// Push 通知處理
+self.addEventListener('push', e=>{
+  const data = e.data.json();
+  const options = {
+    body: data.body || '今日語錄已準備好',
+    icon: '/assets/icon-192.png',
+    badge: '/assets/icon-192.png',
+    tag: 'daily-quote',
+    requireInteraction: false,
+    actions: [
+      { action: 'open', title: '查看' },
+      { action: 'close', title: '關閉' }
+    ],
+    data: {
+      url: data.url || '/'
+    }
+  };
+  e.waitUntil(
+    self.registration.showNotification(data.title || 'Daily Whisper', options)
+  );
+});
+
+// 通知點擊處理
+self.addEventListener('notificationclick', e=>{
+  e.notification.close();
+  const action = e.action;
+  if(action==='open' || !action){
+    e.waitUntil(
+      clients.openWindow(e.notification.data?.url || '/')
+    );
+  }
+});

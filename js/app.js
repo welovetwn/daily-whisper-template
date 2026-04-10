@@ -76,7 +76,7 @@ const images = [
   "https://images.pexels.com/photos/1410232/pexels-photo-1410232.jpeg",
   "https://images.pexels.com/photos/29222109/pexels-photo-29222109.jpeg",
   "https://images.pexels.com/photos/34289149/pexels-photo-34289149.jpeg",
-  "https://images.unsplash.com/photo-1775049618716-b6edef32daff",
+  "https://images.pexels.com/photos/13733430/pexels-photo-13733430.jpeg",
   "https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg",
   "https://images.pexels.com/photos/347140/pexels-photo-347140.jpeg",
   "https://images.pexels.com/photos/355241/pexels-photo-355241.jpeg",
@@ -367,5 +367,90 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight){
   }
 }
 
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('/sw.js'); }
+// Push 通知訂閱管理
+const PUSH_API_URL = 'https://script.google.com/macros/s/AKfycby_73WaISHrq2ij7IdR_90Z9UxLi-ttQOL-_urt29nyuPnnAPIT4k4yeDUYD-WTV0WH/exec';
+
+async function togglePush(){
+  if(!('Notification' in window)){
+    showToast('您的瀏覽器不支援通知功能', 'error');
+    return;
+  }
+  
+  const registration = await navigator.serviceWorker.ready;
+  const subscription = await registration.pushManager.getSubscription();
+  
+  if(subscription){
+    // 取消訂閱
+    await subscription.unsubscribe();
+    localStorage.removeItem('pushEnabled');
+    updatePushButton(false);
+    showToast('已關閉每日推送');
+  } else {
+    // 請求權限並訂閱
+    const permission = await Notification.requestPermission();
+    if(permission!=='granted'){
+      showToast('請允許通知權限以接收每日語錄', 'error');
+      return;
+    }
+    
+    // 這裡需要 VAPID 公鑰 - 暫時使用佔位符
+    // 實際部署時需要從 Apps Script 取得
+    const vapidPublicKey = '6uzMH2XXja529Rh8nyxKU1cfrf_TtNLRyaNLjrpOEVU';
+    
+    try{
+      const newSubscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+      });
+      
+      // 發送訂閱到伺服器
+      await fetch(PUSH_API_URL, {
+        method: 'POST',
+        body: new URLSearchParams({
+          action: 'subscribe',
+          subscription: JSON.stringify(newSubscription)
+        })
+      });
+      
+      localStorage.setItem('pushEnabled', 'true');
+      updatePushButton(true);
+      showToast('已開啟每日推送（早上 8 點）');
+    } catch(e){
+      showToast('訂閱失敗：' + e.message, 'error');
+      console.error('Push subscription error:', e);
+    }
+  }
+}
+
+function updatePushButton(enabled){
+  const btn = document.getElementById('pushBtn');
+  if(btn){
+    btn.textContent = enabled ? '🔕' : '🔔';
+  }
+}
+
+// 檢查目前訂閱狀態
+async function checkPushStatus(){
+  if(!('serviceWorker' in navigator)) return;
+  const registration = await navigator.serviceWorker.ready;
+  const subscription = await registration.pushManager.getSubscription();
+  updatePushButton(!!subscription);
+}
+
+// VAPID 公鑰解碼
+function urlBase64ToUint8Array(base64String){
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for(let i = 0; i < rawData.length; ++i){
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+if('serviceWorker' in navigator){ 
+  navigator.serviceWorker.register('/sw.js');
+  checkPushStatus();
+}
 window.onload=loadQuotes;
