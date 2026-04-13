@@ -248,7 +248,26 @@ function shareImage(){
   };
 
   img.onload = ()=>{
-    ctx.drawImage(img,0,0,canvas.width,canvas.height);
+    // 使用 cover 算法保持图片比例 (类似 CSS background-size: cover)
+    const imgRatio = img.width / img.height;
+    const canvasRatio = canvas.width / canvas.height;
+    let drawWidth, drawHeight, offsetX, offsetY;
+    
+    if (imgRatio > canvasRatio) {
+      // 图片较宽，以高度为基准，左右裁剪
+      drawHeight = canvas.height;
+      drawWidth = drawHeight * imgRatio;
+      offsetX = (canvas.width - drawWidth) / 2;
+      offsetY = 0;
+    } else {
+      // 图片较高，以宽度为基准，上下裁剪
+      drawWidth = canvas.width;
+      drawHeight = drawWidth / imgRatio;
+      offsetX = 0;
+      offsetY = (canvas.height - drawHeight) / 2;
+    }
+    
+    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
     const grad = ctx.createLinearGradient(0,0,0,canvas.height);
     grad.addColorStop(0,'rgba(0,0,0,0.2)');
     grad.addColorStop(1,'rgba(0,0,0,0.7)');
