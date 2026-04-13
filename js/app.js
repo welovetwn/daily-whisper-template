@@ -302,7 +302,7 @@ function shareImage(){
     ctx.textAlign = 'center';
     wrapText(ctx, q.text, canvas.width / 2, canvas.height / 2 - authorHeight / 2, boxWidth - boxPadding * 2, lineHeight);
     ctx.font = 'bold 40px sans-serif';
-    ctx.fillText('― ' + q.author, canvas.width / 2, canvas.height / 2 + textHeight / 2 + gap);
+    ctx.fillText( q.author, canvas.width / 2, canvas.height / 2 + textHeight / 2 + gap);
     
     const url = canvas.toDataURL('image/png');
     const a = document.createElement('a');
@@ -390,7 +390,7 @@ if('serviceWorker' in navigator){
 }
 // 清除快取並重新載入
 async function clearCacheAndReload() {
-  if (!confirm('確定要清除快取並重新載入？\n\n這將清除：\n- 本地收藏資料\n- 頁面快取\n- 重新載入最新資料')) {
+  if (!confirm('確定要清除快取並重新載入？\n\n這將清除：\n- 頁面快取\n- 重新載入最新資料')) {
     return;
   }
   
