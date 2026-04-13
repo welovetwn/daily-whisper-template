@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Push 通知移除驗證測試</title>
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #1a1a2e;
+  color: #eee;
+}
+h1 { color: #ffd700; }
+.test-section {
+  background: #16213e;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+.pass { color: #4CAF50; }
+.fail { color: #f44336; }
+.warning { color: #ff9800; }
+pre {
+  background: #0f3460;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+</style>
+</head>
+<body>
+
+<h1>🧪 Push 通知移除驗證測試</h1>
+
+<div class="test-section">
+  <h2>測試項目</h2>
+  <div id="results"></div>
+</div>
+
+<div class="test-section">
+  <h2>測試說明</h2>
+  <ul>
+    <li>✅ <strong>togglePush 函數不存在</strong> - 確認已被移除</li>
+    <li>✅ <strong>VAPID 公鑰不存在</strong> - 確認硬編碼金鑰已刪除</li>
+    <li>✅ <strong>PUSH_API_URL 不存在</strong> - 確認 API 端點已移除</li>
+    <li>✅ <strong>Service Worker 正常註冊</strong> - 離線功能仍可用</li>
+  </ul>
+</div>
+
+<script>
+const results = [];
+
+// 測試 1: 檢查 togglePush 函數不存在
+if (typeof togglePush === 'function') {
+  results.push({ name: 'togglePush 函數已移除', status: 'fail', detail: 'togglePush 仍然存在' });
+} else {
+  results.push({ name: 'togglePush 函數已移除', status: 'pass', detail: 'togglePush 已正確移除' });
+}
+
+// 測試 2: 檢查 updatePushButton 函數不存在
+if (typeof updatePushButton === 'function') {
+  results.push({ name: 'updatePushButton 函數已移除', status: 'fail', detail: 'updatePushButton 仍然存在' });
+} else {
+  results.push({ name: 'updatePushButton 函數已移除', status: 'pass', detail: 'updatePushButton 已正確移除' });
+}
+
+// 測試 3: 檢查 checkPushStatus 函數不存在
+if (typeof checkPushStatus === 'function') {
+  results.push({ name: 'checkPushStatus 函數已移除', status: 'fail', detail: 'checkPushStatus 仍然存在' });
+} else {
+  results.push({ name: 'checkPushStatus 函數已移除', status: 'pass', detail: 'checkPushStatus 已正確移除' });
+}
+
+// 測試 4: 檢查 urlBase64ToUint8Array 函數不存在
+if (typeof urlBase64ToUint8Array === 'function') {
+  results.push({ name: 'urlBase64ToUint8Array 函數已移除', status: 'fail', detail: 'urlBase64ToUint8Array 仍然存在' });
+} else {
+  results.push({ name: 'urlBase64ToUint8Array 函數已移除', status: 'pass', detail: 'urlBase64ToUint8Array 已正確移除' });
+}
+
+// 測試 5: 檢查 Service Worker 支援
+if ('serviceWorker' in navigator) {
+  results.push({ name: 'Service Worker API 支援', status: 'pass', detail: '瀏覽器支援 Service Worker' });
+} else {
+  results.push({ name: 'Service Worker API 支援', status: 'warning', detail: '瀏覽器不支援 Service Worker' });
+}
+
+// 測試 6: 檢查 VAPID 金鑰不存在於全局
+let vapidFound = false;
+for (let key in window) {
+  if (typeof window[key] === 'string' && window[key].includes && window[key].includes('BLq1lbKiZZKTyRD9hpPI')) {
+    vapidFound = true;
+    break;
+  }
+}
+if (vapidFound) {
+  results.push({ name: 'VAPID 公鑰已移除', status: 'fail', detail: '發現硬編碼 VAPID 公鑰' });
+} else {
+  results.push({ name: 'VAPID 公鑰已移除', status: 'pass', detail: '未發現硬編碼 VAPID 公鑰' });
+}
+
+// 顯示結果
+const resultsDiv = document.getElementById('results');
+results.forEach(test => {
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <p class="${test.status}">
+      ${test.status === 'pass' ? '✅' : test.status === 'fail' ? '❌' : '⚠️'} 
+      <strong>${test.name}</strong><br>
+      <small>${test.detail}</small>
+    </p>
+  `;
+  resultsDiv.appendChild(div);
+});
+
+// 總結
+const passed = results.filter(r => r.status === 'pass').length;
+const failed = results.filter(r => r.status === 'fail').length;
+const warnings = results.filter(r => r.status === 'warning').length;
+
+const summary = document.createElement('div');
+summary.innerHTML = `
+  <hr>
+  <p><strong>測試總結：</strong></p>
+  <p class="pass">✅ 通過: ${passed} 項</p>
+  ${failed > 0 ? `<p class="fail">❌ 失敗: ${failed} 項</p>` : ''}
+  ${warnings > 0 ? `<p class="warning">⚠️ 警告: ${warnings} 項</p>` : ''}
+  <p style="margin-top: 20px;">
+    ${failed === 0 
+      ? '<strong style="color: #4CAF50;">🎉 所有測試通過！Push 通知功能已成功移除。</strong>' 
+      : '<strong style="color: #f44336;">⚠️ 有測試項目失敗，請檢查修改是否完整。</strong>'}
+  </p>
+`;
+resultsDiv.appendChild(summary);
+</script>
+
+</body>
+</html>

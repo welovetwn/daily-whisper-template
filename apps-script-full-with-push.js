@@ -14,21 +14,10 @@
  */
 
 // ==================== 設定區 ====================
-const VAPID_PRIVATE_KEY = '8svRRpYpXbQb-kTassxft2VywrfvpOXat8UW8_3TM54';
-const VAPID_PUBLIC_KEY = 'BLq1lbKiZZKTyRD9hpPI-pw43n1pTS_azcTZCRYdMSzKS2S63cvMk1fx65b2W4M9xsMTHyXrfoT902sOLXo_hNs';
-const VAPID_SUBJECT = 'mailto:你的email@example.com';
+// Push 通知功能已移除 - VAPID 金鑰已刪除
 
 // ==================== doGet - 讀取語錄 ====================
 function doGet(e) {
-  var action = e.parameter.action;
-  
-  // 取得 VAPID 公鑰
-  if (action === 'vapidPublicKey') {
-    return ContentService.createTextOutput(JSON.stringify({
-      publicKey: VAPID_PUBLIC_KEY
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-  
   // 預設：讀取所有語錄
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = sheet.getDataRange().getValues();
@@ -44,23 +33,11 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// ==================== doPost - 投稿 + 推送訂閱 ====================
+// ==================== doPost - 投稿 ====================
 function doPost(e) {
   try {
     var params = parseParams(e);
-    var action = params.action || e.parameter.action;
-    
-    // 處理推送訂閱
-    if (action === 'subscribe') {
-      return handleSubscribe(params);
-    }
-    if (action === 'unsubscribe') {
-      return handleUnsubscribe(params);
-    }
-    
-    // 預設：處理投稿
     return handleSubmit(params);
-    
   } catch (error) {
     return ContentService.createTextOutput(JSON.stringify({
       success: false,
@@ -121,76 +98,6 @@ function handleSubmit(params) {
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
-// ==================== 推送訂閱處理 ====================
-function handleSubscribe(params) {
-  try {
-    var subscription = JSON.parse(params.subscription);
-    var sheet = getOrCreateSheet('PushSubscriptions');
-    
-    var data = sheet.getDataRange().getValues();
-    var endpoint = subscription.endpoint;
-    var exists = false;
-    var rowIndex = -1;
-    
-    for (var i = 1; i < data.length; i++) {
-      if (data[i][0] === endpoint) {
-        exists = true;
-        rowIndex = i + 1;
-        break;
-      }
-    }
-    
-    if (!exists) {
-      sheet.appendRow([
-        endpoint,
-        JSON.stringify(subscription),
-        new Date().toISOString(),
-        'active'
-      ]);
-    } else {
-      sheet.getRange(rowIndex, 4).setValue('active');
-    }
-    
-    return ContentService.createTextOutput(JSON.stringify({
-      success: true,
-      message: '已訂閱推送通知'
-    })).setMimeType(ContentService.MimeType.JSON);
-    
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({
-      success: false,
-      error: err.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-// ==================== 取消訂閱處理 ====================
-function handleUnsubscribe(params) {
-  try {
-    var endpoint = params.endpoint;
-    var sheet = getOrCreateSheet('PushSubscriptions');
-    var data = sheet.getDataRange().getValues();
-    
-    for (var i = 1; i < data.length; i++) {
-      if (data[i][0] === endpoint) {
-        sheet.getRange(i + 1, 4).setValue('unsubscribed');
-        break;
-      }
-    }
-    
-    return ContentService.createTextOutput(JSON.stringify({
-      success: true,
-      message: '已取消訂閱'
-    })).setMimeType(ContentService.MimeType.JSON);
-    
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({
-      success: false,
-      error: err.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
 // ==================== 輔助函數 ====================
 function getOrCreateSheet(name) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -204,24 +111,3 @@ function getOrCreateSheet(name) {
   return sheet;
 }
 
-// ==================== 手動測試推送 ====================
-function testPush() {
-  var sheet = getOrCreateSheet('PushSubscriptions');
-  var data = sheet.getDataRange().getValues();
-  
-  if (data.length <= 1) {
-    Logger.log('沒有訂閱者');
-    return;
-  }
-  
-  for (var i = 1; i < data.length; i++) {
-    if (data[i][3] === 'active') {
-      var subscription = JSON.parse(data[i][1]);
-      Logger.log('找到訂閱者: ' + subscription.endpoint.substring(0, 50) + '...');
-      
-      // 注意：這裡需要實作 Web Push 發送邏輯
-      // 實際發送需要使用 web-push 庫或第三方服務
-      Logger.log('請手動發送測試通知');
-    }
-  }
-}

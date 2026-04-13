@@ -12,6 +12,18 @@ A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, fav
 - Share images (IG Story)
 - PWA (installable)
 
+## Security Update (2025-04-13)
+
+### Removed: Push Notification Feature
+- **Reason**: VAPID private key was hardcoded in source code, creating security risk
+- **Changes**:
+  - Removed `togglePush()` and related functions from `js/app.js`
+  - Removed 🔔 button from `index.html`
+  - Removed push/notificationclick event handlers from `sw.js`
+  - Removed VAPID keys from `apps-script-full-with-push.js`
+  - Removed subscribe/unsubscribe handlers from Apps Script
+- **Impact**: Push notifications are no longer available. Core features (quotes, favorites, sharing) remain functional.
+
 ## Bug Fixes (2024-04-10)
 
 ### Fixed: Share Image Function
