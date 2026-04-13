@@ -376,4 +376,43 @@ if('serviceWorker' in navigator){
     console.error('[SW] Registration failed:', err);
   });
 }
+// 清除快取並重新載入
+async function clearCacheAndReload() {
+  if (!confirm('確定要清除快取並重新載入？\n\n這將清除：\n- 本地收藏資料\n- 頁面快取\n- 重新載入最新資料')) {
+    return;
+  }
+  
+  try {
+    // 1. 清除 localStorage
+    localStorage.clear();
+    console.log('[Cache] localStorage cleared');
+    
+    // 2. 清除 Service Worker 註冊
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const reg of registrations) {
+        await reg.unregister();
+        console.log('[Cache] Service Worker unregistered');
+      }
+    }
+    
+    // 3. 清除快取
+    if ('caches' in window) {
+      const cacheNames = await caches.keys();
+      for (const name of cacheNames) {
+        await caches.delete(name);
+        console.log('[Cache] Cache deleted:', name);
+      }
+    }
+    
+    // 4. 強制重新載入（帶時間戳避免快取）
+    const timestamp = new Date().getTime();
+    window.location.href = window.location.pathname + '?_=' + timestamp;
+    
+  } catch (error) {
+    console.error('[Cache] Clear failed:', error);
+    alert('清除快取失敗: ' + error.message);
+  }
+}
+
 window.onload=loadQuotes;
