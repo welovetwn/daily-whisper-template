@@ -7,8 +7,28 @@
 <link rel='stylesheet' href='css/style.css'>
 <style>
 body { padding: 20px; background: #111; min-height: 100vh; overflow-y: auto; }
-h2 { padding: 20px; margin-top: 40px; color: #fff; }
+h2 { padding: 20px; margin-top: 80px; color: #fff; text-align: center; }
 .back { position: fixed; top: 20px; left: 20px; color: #fff; text-decoration: none; z-index: 100; font-size: 18px; }
+.view-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto;
+  max-width: 400px;
+}
+.view-tab {
+  padding: 10px 30px;
+  background: #333;
+  color: #888;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 14px;
+}
+.view-tab.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
 .tag-cloud {
   display: flex;
   flex-wrap: wrap;
@@ -35,6 +55,32 @@ h2 { padding: 20px; margin-top: 40px; color: #fff; }
   opacity: 0.8;
   margin-left: 5px;
 }
+.author-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 20px;
+  justify-content: center;
+}
+.author-item {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.author-item:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 20px rgba(240, 147, 251, 0.5);
+}
+.author-count {
+  font-size: 0.8em;
+  opacity: 0.8;
+  margin-left: 5px;
+}
 .loading {
   text-align: center;
   color: #666;
@@ -49,65 +95,130 @@ h2 { padding: 20px; margin-top: 40px; color: #fff; }
 </head>
 <body>
 <a href='index.html' class='back'>← 返回</a>
-<h2>🏷️ Tag Cloud</h2>
-<div id='tagCloud' class='tag-cloud'>
-  <div class='loading'>載入中...</div>
+<div class='view-tabs'>
+  <div class='view-tab active' onclick='switchView("tags")'>🏷️ by Tag</div>
+  <div class='view-tab' onclick='switchView("authors")'>👤 by 作者</div>
+</div>
+<h2 id='pageTitle'>🏷️ Tag Cloud</h2>
+<div id='contentArea'>
+  <div id='tagCloud' class='tag-cloud'>
+    <div class='loading'>載入中...</div>
+  </div>
 </div>
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbyGnwnu0FDnCLGXofOwB4s7leYLEk3ssHfJsJCjTgOR5KEfwNWhoh6XdZFNnKkso1de/exec';
 
-async function loadTags() {
-  const container = document.getElementById('tagCloud');
+let quotesData = [];
+let currentView = 'tags';
+
+async function loadData() {
+  const container = document.getElementById(currentView === 'tags' ? 'tagCloud' : 'authorCloud') || document.getElementById('contentArea');
   
   try {
     const res = await fetch(API_URL);
     if (!res.ok) throw new Error('Network response was not ok');
     
-    const quotes = await res.json();
-    if (!Array.isArray(quotes) || quotes.length === 0) {
+    quotesData = await res.json();
+    if (!Array.isArray(quotesData) || quotesData.length === 0) {
       container.innerHTML = '<div class="error">尚無語錄資料</div>';
       return;
     }
     
-    // 統計 Tag 頻率
-    const tagCounts = {};
-    quotes.forEach(q => {
-      if (q.tags && Array.isArray(q.tags)) {
-        q.tags.forEach(tag => {
-          if (tag) {
-            tagCounts[tag] = (tagCounts[tag] || 0) + 1;
-          }
-        });
-      }
-    });
-    
-    // 轉換為陣列並排序（依頻率）
-    const sortedTags = Object.entries(tagCounts)
-      .sort((a, b) => b[1] - a[1]);
-    
-    if (sortedTags.length === 0) {
-      container.innerHTML = '<div class="error">尚無 Tag 資料</div>';
-      return;
+    if (currentView === 'tags') {
+      renderTags();
+    } else {
+      renderAuthors();
     }
     
-    // 渲染 Tag Cloud
-    container.innerHTML = '';
-    sortedTags.forEach(([tag, count]) => {
-      const tagEl = document.createElement('a');
-      tagEl.className = 'tag-item';
-      tagEl.href = `tag-filter.html?tag=${encodeURIComponent(tag)}`;
-      tagEl.innerHTML = `#${tag}<span class="tag-count">(${count})</span>`;
-      container.appendChild(tagEl);
-    });
-    
   } catch (error) {
-    console.error('Failed to load tags:', error);
+    console.error('Failed to load data:', error);
     container.innerHTML = `<div class="error">載入失敗: ${error.message}</div>`;
   }
 }
 
-loadTags();
+function renderTags() {
+  const container = document.getElementById('tagCloud') || document.createElement('div');
+  container.id = 'tagCloud';
+  container.className = 'tag-cloud';
+  
+  const tagCounts = {};
+  quotesData.forEach(q => {
+    if (q.tags && Array.isArray(q.tags)) {
+      q.tags.forEach(tag => {
+        if (tag) {
+          tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+        }
+      });
+    }
+  });
+  
+  const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+  
+  container.innerHTML = '';
+  sortedTags.forEach(([tag, count]) => {
+    const tagEl = document.createElement('a');
+    tagEl.className = 'tag-item';
+    tagEl.href = `tag-filter.html?tag=${encodeURIComponent(tag)}`;
+    tagEl.innerHTML = `#${tag}<span class="tag-count">(${count})</span>`;
+    container.appendChild(tagEl);
+  });
+  
+  const contentArea = document.getElementById('contentArea');
+  contentArea.innerHTML = '';
+  contentArea.appendChild(container);
+}
+
+function renderAuthors() {
+  const container = document.getElementById('authorCloud') || document.createElement('div');
+  container.id = 'authorCloud';
+  container.className = 'author-cloud';
+  
+  const authorCounts = {};
+  quotesData.forEach(q => {
+    const author = q.author || '佚名';
+    authorCounts[author] = (authorCounts[author] || 0) + 1;
+  });
+  
+  const sortedAuthors = Object.entries(authorCounts).sort((a, b) => b[1] - a[1]);
+  
+  container.innerHTML = '';
+  sortedAuthors.forEach(([author, count]) => {
+    const authorEl = document.createElement('a');
+    authorEl.className = 'author-item';
+    authorEl.href = `author-filter.html?author=${encodeURIComponent(author)}`;
+    authorEl.innerHTML = `${author}<span class="author-count">(${count})</span>`;
+    container.appendChild(authorEl);
+  });
+  
+  const contentArea = document.getElementById('contentArea');
+  contentArea.innerHTML = '';
+  contentArea.appendChild(container);
+}
+
+function switchView(view) {
+  currentView = view;
+  
+  // 更新標籤狀態
+  document.querySelectorAll('.view-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  // 更新標題
+  document.getElementById('pageTitle').textContent = view === 'tags' ? '🏷️ Tag Cloud' : '👤 Authors';
+  
+  // 渲染內容
+  if (quotesData.length === 0) {
+    loadData();
+  } else if (view === 'tags') {
+    renderTags();
+  } else {
+    renderAuthors();
+  }
+}
+
+loadData();
 </script>
 </body>
 </html>
