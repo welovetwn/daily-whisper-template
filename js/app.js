@@ -254,16 +254,82 @@ function shareImage(){
     grad.addColorStop(1,'rgba(0,0,0,0.7)');
     ctx.fillStyle = grad;
     ctx.fillRect(0,0,canvas.width,canvas.height);
+    
+    // 繪製文字背景框（圓角半透明）
+    const boxWidth = 950;
+    const boxPadding = 60;
+    const lineHeight = 70;
+    const authorHeight = 60;
+    const gap = 40;
+    
+    // 計算文字行數來決定框的高度
+    ctx.font = 'bold 60px sans-serif';
+    const lines = getTextLines(ctx, q.text, boxWidth - boxPadding * 2);
+    const textHeight = lines.length * lineHeight;
+    const boxHeight = textHeight + authorHeight + gap + boxPadding * 2;
+    const boxX = (canvas.width - boxWidth) / 2;
+    const boxY = canvas.height / 2 - boxHeight / 2;
+    
+    // 繪製半透明圓角背景框
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    roundRect(ctx, boxX, boxY, boxWidth, boxHeight, 20);
+    ctx.fill();
+    ctx.restore();
+    
+    // 繪製文字
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 60px sans-serif';
     ctx.textAlign = 'center';
-    wrapText(ctx,q.text,canvas.width/2,canvas.height/2,900,70);
+    wrapText(ctx, q.text, canvas.width / 2, canvas.height / 2 - authorHeight / 2, boxWidth - boxPadding * 2, lineHeight);
     ctx.font = 'bold 40px sans-serif';
-    ctx.fillText('― '+q.author, canvas.width/2, canvas.height/2 + 250);
+    ctx.fillText('― ' + q.author, canvas.width / 2, canvas.height / 2 + textHeight / 2 + gap);
+    
     const url = canvas.toDataURL('image/png');
     const a = document.createElement('a');
-    a.href = url; a.download='DailyWhisper.png'; a.click();
+    a.href = url; a.download = 'DailyWhisper.png';
+    a.click();
   };
+}
+
+// 計算文本行數（用於 shareImage 背景框高度計算）
+function getTextLines(ctx, text, maxWidth) {
+  const paragraphs = text.split('\n');
+  let allLines = [];
+  
+  paragraphs.forEach(paragraph => {
+    const chars = paragraph.split('');
+    let line = '';
+    for (let n = 0; n < chars.length; n++) {
+      const testLine = line + chars[n];
+      const metrics = ctx.measureText(testLine);
+      const testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        allLines.push(line);
+        line = chars[n];
+      } else {
+        line = testLine;
+      }
+    }
+    allLines.push(line);
+  });
+  
+  return allLines;
+}
+
+// 繪製圓角矩形
+function roundRect(ctx, x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
 }
 
 function wrapText(ctx, text, x, y, maxWidth, lineHeight){
