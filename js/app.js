@@ -96,7 +96,7 @@ function randomImg(){ return images[Math.floor(Math.random()*images.length)]; }
 async function loadQuotes(){
   try {
     // Google Sheets JSON URL 替換成你的 Web App
-    const res = await fetch('https://script.google.com/macros/s/AKfycby_73WaISHrq2ij7IdR_90Z9UxLi-ttQOL-_urt29nyuPnnAPIT4k4yeDUYD-WTV0WH/exec');
+    const res = await fetch('https://script.google.com/macros/s/AKfycbyGnwnu0FDnCLGXofOwB4s7leYLEk3ssHfJsJCjTgOR5KEfwNWhoh6XdZFNnKkso1de/exec');
     if (!res.ok) {
       throw new Error('Network response was not ok: ' + res.status);
     }
