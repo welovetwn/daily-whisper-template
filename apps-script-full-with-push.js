@@ -100,9 +100,7 @@ function handleSubmit(params) {
   
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var createdDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  // 將 | 分隔的 tags 轉回逗號分隔存入 Google Sheets（保持舊格式相容）
-  var tagsForSheet = tags.replace(/\|/g, ', ');
-  sheet.appendRow([text, author, tagsForSheet, createdDate, bgImage]);
+  sheet.appendRow([text, author, tags, createdDate, bgImage]);
   
   return ContentService.createTextOutput(JSON.stringify({
     success: true,
