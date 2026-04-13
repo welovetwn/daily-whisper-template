@@ -54,7 +54,7 @@ document.getElementById('form').onsubmit = async (e) => {
     const formData = new URLSearchParams();
     formData.append('text', text);
     formData.append('author', author);
-    formData.append('tags', tags.join(', '));
+    formData.append('tags', tags.join('|'));
     formData.append('bgImage', bgImage);
     
     const response = await fetch(SUBMIT_API_URL, {

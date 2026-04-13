@@ -26,7 +26,7 @@ function doGet(e) {
     json.push({
       text: data[i][0],
       author: data[i][1],
-      tags: data[i][2] ? data[i][2].toString().split(',').map(s => s.trim()) : [],
+      tags: data[i][2] ? data[i][2].toString().split(/[,|]/).map(s => s.trim()).filter(s => s) : [],
       createdDate: data[i][3] || '',
       bgImage: data[i][4] || ''
     });
@@ -100,7 +100,9 @@ function handleSubmit(params) {
   
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var createdDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  sheet.appendRow([text, author, tags, createdDate, bgImage]);
+  // 將 | 分隔的 tags 轉回逗號分隔存入 Google Sheets（保持舊格式相容）
+  var tagsForSheet = tags.replace(/\|/g, ', ');
+  sheet.appendRow([text, author, tagsForSheet, createdDate, bgImage]);
   
   return ContentService.createTextOutput(JSON.stringify({
     success: true,
