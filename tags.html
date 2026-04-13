@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang='zh-Hant'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Tag Cloud - Daily Whisper</title>
+<link rel='stylesheet' href='css/style.css'>
+<style>
+body { padding: 20px; background: #111; min-height: 100vh; }
+h2 { padding: 20px; margin-top: 40px; color: #fff; }
+.back { position: fixed; top: 20px; left: 20px; color: #fff; text-decoration: none; z-index: 100; font-size: 18px; }
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 20px;
+  justify-content: center;
+}
+.tag-item {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.tag-item:hover {
+  transform: scale(1.1);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+}
+.tag-count {
+  font-size: 0.8em;
+  opacity: 0.8;
+  margin-left: 5px;
+}
+.loading {
+  text-align: center;
+  color: #666;
+  padding: 40px;
+}
+.error {
+  text-align: center;
+  color: #f66;
+  padding: 40px;
+}
+</style>
+</head>
+<body>
+<a href='index.html' class='back'>← 返回</a>
+<h2>🏷️ Tag Cloud</h2>
+<div id='tagCloud' class='tag-cloud'>
+  <div class='loading'>載入中...</div>
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycby_73WaISHrq2ij7IdR_90Z9UxLi-ttQOL-_urt29nyuPnnAPIT4k4yeDUYD-WTV0WH/exec';
+
+async function loadTags() {
+  const container = document.getElementById('tagCloud');
+  
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error('Network response was not ok');
+    
+    const quotes = await res.json();
+    if (!Array.isArray(quotes) || quotes.length === 0) {
+      container.innerHTML = '<div class="error">尚無語錄資料</div>';
+      return;
+    }
+    
+    // 統計 Tag 頻率
+    const tagCounts = {};
+    quotes.forEach(q => {
+      if (q.tags && Array.isArray(q.tags)) {
+        q.tags.forEach(tag => {
+          if (tag) {
+            tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+          }
+        });
+      }
+    });
+    
+    // 轉換為陣列並排序（依頻率）
+    const sortedTags = Object.entries(tagCounts)
+      .sort((a, b) => b[1] - a[1]);
+    
+    if (sortedTags.length === 0) {
+      container.innerHTML = '<div class="error">尚無 Tag 資料</div>';
+      return;
+    }
+    
+    // 渲染 Tag Cloud
+    container.innerHTML = '';
+    sortedTags.forEach(([tag, count]) => {
+      const tagEl = document.createElement('a');
+      tagEl.className = 'tag-item';
+      tagEl.href = `tag-filter.html?tag=${encodeURIComponent(tag)}`;
+      tagEl.innerHTML = `#${tag}<span class="tag-count">(${count})</span>`;
+      container.appendChild(tagEl);
+    });
+    
+  } catch (error) {
+    console.error('Failed to load tags:', error);
+    container.innerHTML = `<div class="error">載入失敗: ${error.message}</div>`;
+  }
+}
+
+loadTags();
+</script>
+</body>
+</html>

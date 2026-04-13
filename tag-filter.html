@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang='zh-Hant'>
+<head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<title>Tag 筛选 - Daily Whisper</title>
+<link rel='stylesheet' href='css/style.css'>
+<style>
+body { padding: 20px; background: #111; min-height: 100vh; }
+h2 { padding: 20px; margin-top: 40px; color: #fff; }
+.back { position: fixed; top: 20px; left: 20px; color: #fff; text-decoration: none; z-index: 100; font-size: 18px; }
+.tag-filter { 
+  position: fixed; 
+  top: 20px; 
+  right: 20px; 
+  padding: 8px 16px; 
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff; 
+  border-radius: 20px;
+  font-size: 14px;
+  z-index: 100;
+}
+.quote-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.quote-item {
+  padding: 30px 20px;
+  border-bottom: 1px solid #333;
+  color: #fff;
+  position: relative;
+}
+.quote-text {
+  font-size: 1.2em;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  white-space: pre-wrap;
+}
+.quote-author {
+  color: #888;
+  font-size: 0.9em;
+}
+.quote-tags {
+  margin-top: 15px;
+}
+.quote-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  margin: 0 8px 8px 0;
+  background: rgba(102, 126, 234, 0.3);
+  color: #a0a0ff;
+  border-radius: 12px;
+  font-size: 0.8em;
+}
+.quote-tag.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+.quote-date {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #666;
+  font-size: 0.75em;
+}
+.loading {
+  text-align: center;
+  color: #666;
+  padding: 60px;
+}
+.error {
+  text-align: center;
+  color: #f66;
+  padding: 60px;
+}
+.empty {
+  text-align: center;
+  color: #666;
+  padding: 60px;
+}
+</style>
+</head>
+<body>
+<a href='tags.html' class='back'>← 返回 Tag Cloud</a>
+<span id='currentTag' class='tag-filter'></span>
+<h2>🏷️ 筛选结果</h2>
+<div id='quoteList' class='quote-list'>
+  <div class='loading'>載入中...</div>
+</div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycby_73WaISHrq2ij7IdR_90Z9UxLi-ttQOL-_urt29nyuPnnAPIT4k4yeDUYD-WTV0WH/exec';
+
+// 取得 URL 參數中的 tag
+const urlParams = new URLSearchParams(window.location.search);
+const filterTag = urlParams.get('tag');
+
+async function loadFilteredQuotes() {
+  const container = document.getElementById('quoteList');
+  const tagDisplay = document.getElementById('currentTag');
+  
+  if (!filterTag) {
+    container.innerHTML = '<div class="error">請選擇一個 Tag</div>';
+    tagDisplay.style.display = 'none';
+    return;
+  }
+  
+  tagDisplay.textContent = `#${filterTag}`;
+  
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error('Network response was not ok');
+    
+    const quotes = await res.json();
+    if (!Array.isArray(quotes) || quotes.length === 0) {
+      container.innerHTML = '<div class="error">尚無語錄資料</div>';
+      return;
+    }
+    
+    // 篩選符合 Tag 的語錄
+    const filtered = quotes.filter(q => 
+      q.tags && q.tags.some(t => t.toLowerCase() === filterTag.toLowerCase())
+    );
+    
+    if (filtered.length === 0) {
+      container.innerHTML = `<div class="empty">沒有符合「${filterTag}」的語錄</div>`;
+      return;
+    }
+    
+    // 渲染結果
+    container.innerHTML = '';
+    filtered.forEach(q => {
+      const item = document.createElement('div');
+      item.className = 'quote-item';
+      
+      // 日期顯示
+      let dateHtml = '';
+      if (q.createdDate) {
+        dateHtml = `<span class="quote-date">${q.createdDate}</span>`;
+      }
+      
+      // Tags 顯示
+      let tagsHtml = '';
+      if (q.tags && q.tags.length > 0) {
+        tagsHtml = '<div class="quote-tags">' + 
+          q.tags.map(t => `<span class="quote-tag ${t.toLowerCase() === filterTag.toLowerCase() ? 'active' : ''}">#${t}</span>`).join('') +
+          '</div>';
+      }
+      
+      item.innerHTML = `
+        ${dateHtml}
+        <div class="quote-text">${(q.text || '').replace(/\n/g, '<br>')}</div>
+        <div class="quote-author">― ${q.author || '佚名'}</div>
+        ${tagsHtml}
+      `;
+      
+      container.appendChild(item);
+    });
+    
+    // 更新標題
+    document.title = `#${filterTag} - Daily Whisper`;
+    
+  } catch (error) {
+    console.error('Failed to load quotes:', error);
+    container.innerHTML = `<div class="error">載入失敗: ${error.message}</div>`;
+  }
+}
+
+loadFilteredQuotes();
+</script>
+</body>
+</html>

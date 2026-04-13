@@ -149,7 +149,9 @@ function createSlides(data) {
 
     const bg = document.createElement('div');
     bg.className = 'bg';
-    bg.style.backgroundImage = 'url(' + randomImg() + ')';
+    // 使用固定背景图片（如果有），否则使用随机图片
+    const bgUrl = q.bgImage && q.bgImage.trim() ? q.bgImage.trim() : randomImg();
+    bg.style.backgroundImage = 'url(' + bgUrl + ')';
 
     const overlay = document.createElement('div');
     overlay.className = 'overlay';

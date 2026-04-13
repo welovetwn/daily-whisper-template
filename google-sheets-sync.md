@@ -12,12 +12,14 @@
    - `text` （格言文字）  
    - `author` （作者）  
    - `tags` （標籤，用逗號分隔）  
+   - `createdDate` （建立日期，格式：YYYY-MM-DD，選填）  
+   - `bgImage` （固定背景圖片網址，選填，留空則隨機）  
 3. 範例資料：
 
-| text                                | author       | tags         |
-|-----------------------------------|--------------|--------------|
-| Be yourself; everyone else...     | Oscar Wilde  | life,identity|
-| 慢一點沒關係，只要不要停下來。     | 佚名          | 成長,堅持      |
+| text                                | author       | tags         | createdDate | bgImage |
+|-----------------------------------|--------------|--------------|-------------|---------|
+| Be yourself; everyone else...     | Oscar Wilde  | life,identity| 2025-04-13  |         |
+| 慢一點沒關係，只要不要停下來。     | 佚名          | 成長,堅持      | 2025-04-12  | https://example.com/bg.jpg |
 
 ---
 

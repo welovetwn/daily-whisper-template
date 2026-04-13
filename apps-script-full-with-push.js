@@ -26,9 +26,18 @@ function doGet(e) {
     json.push({
       text: data[i][0],
       author: data[i][1],
-      tags: data[i][2] ? data[i][2].toString().split(',').map(s => s.trim()) : []
+      tags: data[i][2] ? data[i][2].toString().split(',').map(s => s.trim()) : [],
+      createdDate: data[i][3] || '',
+      bgImage: data[i][4] || ''
     });
   }
+  // 依 createdDate 降冪排序（新到舊），無日期者排最後
+  json.sort(function(a, b) {
+    if (!a.createdDate && !b.createdDate) return 0;
+    if (!a.createdDate) return 1;
+    if (!b.createdDate) return -1;
+    return new Date(b.createdDate) - new Date(a.createdDate);
+  });
   return ContentService.createTextOutput(JSON.stringify(json))
     .setMimeType(ContentService.MimeType.JSON);
 }
@@ -80,6 +89,7 @@ function handleSubmit(params) {
   var text = params.text || '';
   var author = params.author || '';
   var tags = params.tags || '';
+  var bgImage = params.bgImage || '';
   
   if (!text || !author) {
     return ContentService.createTextOutput(JSON.stringify({
@@ -89,12 +99,13 @@ function handleSubmit(params) {
   }
   
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  sheet.appendRow([text, author, tags]);
+  var createdDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  sheet.appendRow([text, author, tags, createdDate, bgImage]);
   
   return ContentService.createTextOutput(JSON.stringify({
     success: true,
     message: '投稿成功！',
-    data: { text: text, author: author, tags: tags }
+    data: { text: text, author: author, tags: tags, createdDate: createdDate, bgImage: bgImage }
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
