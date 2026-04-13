@@ -16,7 +16,7 @@ A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, fav
 
 ### Improved: Share Image Line Spacing
 - **Issue**: Text lines in shared images were too close together (10px spacing with 60px font)
-- **Fix**: Increased `lineHeight` from `70` to `90` in `shareImage()` function (`js/app.js:280`)
+- **Fix**: Increased `lineHeight` from `90` to `120` in `shareImage()` function (`js/app.js:280`)
 - **Impact**: Better readability with ~30px spacing between text lines
 
 ## Security Update (2025-04-13)
