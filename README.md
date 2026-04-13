@@ -14,6 +14,12 @@ A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, fav
 
 ## UI Improvements (2025-04-13)
 
+### Improved: Multi-Author Support in Tag Cloud
+- **Feature**: Author cloud now supports multiple authors per quote (comma-separated)
+- **Example**: "陳牧師, 張傳道" will create separate entries for both authors
+- **Fix**: Modified `renderAuthors()` in `tags.html` to split author string by comma
+- **Impact**: Better categorization when quotes have multiple contributors
+
 ### Improved: Share Image Line Spacing
 - **Issue**: Text lines in shared images were too close together (10px spacing with 60px font)
 - **Fix**: Increased `lineHeight` from `90` to `120` in `shareImage()` function (`js/app.js:280`)
