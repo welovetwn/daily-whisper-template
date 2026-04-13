@@ -23,6 +23,7 @@ h2, p { text-align: center; }
   <textarea placeholder='句子（支援多行）' id='text' rows='4' required></textarea><br>
   <input placeholder='作者' id='author' required><br>
   <input placeholder='tags（用逗號分隔）' id='tags'><br>
+  <input placeholder='固定背景圖片網址（選填，留空則隨機）' id='bgImage'><br>
   <button type='submit'>送出</button>
 </form>
 <script>
@@ -37,6 +38,7 @@ document.getElementById('form').onsubmit = async (e) => {
   const text = document.getElementById('text').value;
   const author = document.getElementById('author').value;
   const tags = document.getElementById('tags').value.split(',').filter(t => t.trim());
+  const bgImage = document.getElementById('bgImage').value.trim();
 
   // 檢查 API URL 是否已設定
   if (SUBMIT_API_URL.includes('YOUR_SCRIPT_ID')) {
@@ -53,6 +55,7 @@ document.getElementById('form').onsubmit = async (e) => {
     formData.append('text', text);
     formData.append('author', author);
     formData.append('tags', tags.join(', '));
+    formData.append('bgImage', bgImage);
     
     const response = await fetch(SUBMIT_API_URL, {
       method: 'POST',
