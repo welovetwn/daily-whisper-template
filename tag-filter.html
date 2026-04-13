@@ -6,7 +6,7 @@
 <title>Tag 篩選 - Daily Whisper</title>
 <link rel='stylesheet' href='css/style.css'>
 <style>
-body { padding: 20px; background: #111; min-height: 100vh; }
+body { padding: 20px; background: #111; min-height: 100vh; overflow-y: auto; }
 h2 { padding: 20px; margin-top: 40px; color: #fff; }
 .back { position: fixed; top: 20px; left: 20px; color: #fff; text-decoration: none; z-index: 100; font-size: 18px; }
 .tag-filter { 
@@ -136,7 +136,9 @@ async function loadFilteredQuotes() {
       // 日期顯示
       let dateHtml = '';
       if (q.createdDate) {
-        dateHtml = `<span class="quote-date">${q.createdDate}</span>`;
+        // 只取日期部分 (YYYY-MM-DD)
+        const dateOnly = q.createdDate.split('T')[0];
+        dateHtml = `<span class="quote-date">${dateOnly}</span>`;
       }
       
       // Tags 顯示
