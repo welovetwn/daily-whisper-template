@@ -247,7 +247,7 @@ function shareImage(){
     alert('圖片載入失敗，請稍後再試');
   };
 
-  img.onload = ()=>{
+  img.onload = async ()=>{
     // 使用 cover 算法保持图片比例 (类似 CSS background-size: cover)
     const imgRatio = img.width / img.height;
     const canvasRatio = canvas.width / canvas.height;
@@ -304,11 +304,18 @@ function shareImage(){
     ctx.font = 'bold 40px sans-serif';
     ctx.fillText( q.author, canvas.width / 2, canvas.height / 2 + textHeight / 2 + gap);
     
+    // 等待芫荽體加載完成
+    await document.fonts.load('30px Iansui');
+    
     // 繪製右下角水印
     ctx.save();
-    ctx.font = '30px sans-serif';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
     ctx.textAlign = 'right';
+    // 中文使用芫荽體
+    ctx.font = '30px Iansui, sans-serif';
+    ctx.fillText('微光輕語🌿', canvas.width - 40, canvas.height - 80);
+    // 英文使用預設字體
+    ctx.font = '30px sans-serif';
     ctx.fillText('Daily Whisper🕯️', canvas.width - 40, canvas.height - 40);
     ctx.restore();
     

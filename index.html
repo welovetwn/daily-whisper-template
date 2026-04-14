@@ -7,8 +7,17 @@
 <title>Daily Whisper</title>
 <link rel='stylesheet' href='css/style.css'>
 <link rel='manifest' href='manifest.json'>
+<style>
+/* 芫荽體 */
+@font-face {
+  font-family: "Iansui";
+  src: url(https://cdn.jsdelivr.net/gh/tadlearn/webfonts/Iansui.woff2) format("woff2");
+}
+</style>
 </head>
 <body>
+<!-- 預加載芫荽體 -->
+<span style="font-family: 'Iansui', sans-serif; position: absolute; visibility: hidden;">預載</span>
 <div class='logo'>DAILY WHISPER</div>
 <div class='controls'>
   <div class='btn' onclick='nextSlide()'>↓</div>
