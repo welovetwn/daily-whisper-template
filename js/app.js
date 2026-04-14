@@ -304,8 +304,9 @@ function shareImage(){
     ctx.font = 'bold 40px sans-serif';
     ctx.fillText( q.author, canvas.width / 2, canvas.height / 2 + textHeight / 2 + gap);
     
-    // 等待芫荽體加載完成
+    // 等待字體加載完成
     await document.fonts.load('30px Iansui');
+    await document.fonts.load('30px Sriracha');
     
     // 繪製右下角水印
     ctx.save();
@@ -314,8 +315,8 @@ function shareImage(){
     // 中文使用芫荽體
     ctx.font = '30px Iansui, sans-serif';
     ctx.fillText('微光輕語🌿', canvas.width - 40, canvas.height - 80);
-    // 英文使用預設字體
-    ctx.font = '30px sans-serif';
+    // 英文使用 Sriracha
+    ctx.font = '30px Sriracha, cursive';
     ctx.fillText('Daily Whisper🕯️', canvas.width - 40, canvas.height - 40);
     ctx.restore();
     
