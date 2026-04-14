@@ -220,8 +220,8 @@ function changeBackground() {
   const currentBg = bgElement.style.backgroundImage;
   let newBg;
   do {
-    newBg = pics[Math.floor(Math.random() * pics.length)];
-  } while (`url("${newBg}")` === currentBg && pics.length > 1);
+    newBg = images[Math.floor(Math.random() * images.length)];
+  } while (`url("${newBg}")` === currentBg && images.length > 1);
   
   bgElement.style.backgroundImage = `url(${newBg})`;
 }
