@@ -207,6 +207,25 @@ function filterTag(tag){ createSlides(quotes.filter(q=>q.tags.includes(tag))); }
 
 function nextSlide(){ document.querySelector('.container').scrollBy({top:window.innerHeight,behavior:'smooth'});}
 
+// 更換當前頁面背景圖片
+function changeBackground() {
+  const slides = document.querySelectorAll('.slide');
+  const currentSlide = slides[currentIndex];
+  if (!currentSlide) return;
+  
+  const bgElement = currentSlide.querySelector('.bg');
+  if (!bgElement) return;
+  
+  // 隨機選擇一張新背景圖（排除當前相同的圖）
+  const currentBg = bgElement.style.backgroundImage;
+  let newBg;
+  do {
+    newBg = pics[Math.floor(Math.random() * pics.length)];
+  } while (`url("${newBg}")` === currentBg && pics.length > 1);
+  
+  bgElement.style.backgroundImage = `url(${newBg})`;
+}
+
 // IG Story 分享
 function shareImage(){
   const q = quotes[currentIndex];
