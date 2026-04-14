@@ -300,8 +300,12 @@ function shareImage(){
     const authorHeight = 60;
     const gap = 40;
     
+    // 等待 Chiron GoRound TC 字體加載
+    await document.fonts.load('bold 60px "Chiron GoRound TC"');
+    await document.fonts.load('bold 40px "Chiron GoRound TC"');
+    
     // 計算文字行數來決定框的高度
-    ctx.font = 'bold 60px sans-serif';
+    ctx.font = 'bold 60px "Chiron GoRound TC", sans-serif';
     const lines = getTextLines(ctx, q.text, boxWidth - boxPadding * 2);
     const textHeight = lines.length * lineHeight;
     const boxHeight = textHeight + authorHeight + gap + boxPadding * 2;
@@ -317,13 +321,13 @@ function shareImage(){
     
     // 繪製文字
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold 60px sans-serif';
+    ctx.font = 'bold 60px "Chiron GoRound TC", sans-serif';
     ctx.textAlign = 'center';
     wrapText(ctx, q.text, canvas.width / 2, canvas.height / 2 - authorHeight / 2, boxWidth - boxPadding * 2, lineHeight);
-    ctx.font = 'bold 40px sans-serif';
+    ctx.font = 'bold 40px "Chiron GoRound TC", sans-serif';
     ctx.fillText( q.author, canvas.width / 2, canvas.height / 2 + textHeight / 2 + gap);
     
-    // 等待字體加載完成
+    // 等待水印字體加載完成
     await document.fonts.load('30px Iansui');
     await document.fonts.load('30px Sriracha');
     
