@@ -29,6 +29,11 @@ h2 { padding: 20px; margin-top: 40px; color: #fff; }
   border-bottom: 1px solid #333;
   color: #fff;
   position: relative;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.quote-item:hover {
+  background-color: rgba(255,255,255,0.05);
 }
 .quote-text {
   font-size: 1.2em;
@@ -155,6 +160,15 @@ async function loadFilteredQuotes() {
         <div class="quote-author">― ${q.author || '佚名'}</div>
         ${tagsHtml}
       `;
+      
+      // 點擊跳轉到主頁顯示該 Quote
+      item.onclick = () => {
+        const params = new URLSearchParams();
+        params.set('text', q.text);
+        params.set('author', q.author || '佚名');
+        if (q.bgImage) params.set('bg', q.bgImage);
+        window.location.href = `index.html?${params.toString()}`;
+      };
       
       container.appendChild(item);
     });

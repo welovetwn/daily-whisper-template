@@ -95,7 +95,25 @@ function randomImg(){ return images[Math.floor(Math.random()*images.length)]; }
 
 async function loadQuotes(){
   try {
-    // Google Sheets JSON URL 替換成你的 Web App
+    // 檢查是否有從篩選頁面傳來的單個 quote
+    const urlParams = new URLSearchParams(window.location.search);
+    const singleQuoteText = urlParams.get('text');
+    const singleQuoteAuthor = urlParams.get('author');
+    const singleQuoteBg = urlParams.get('bg');
+    
+    if (singleQuoteText) {
+      // 單個 quote 模式（從 tag/author 篩選頁面點擊進入）
+      quotes = [{
+        text: singleQuoteText,
+        author: singleQuoteAuthor || '佚名',
+        bgImage: singleQuoteBg || null,
+        tags: []
+      }];
+      createSlides(quotes);
+      return;
+    }
+    
+    // 正常模式：從 API 載入所有語錄
     const res = await fetch('https://script.google.com/macros/s/AKfycbyGnwnu0FDnCLGXofOwB4s7leYLEk3ssHfJsJCjTgOR5KEfwNWhoh6XdZFNnKkso1de/exec');
     if (!res.ok) {
       throw new Error('Network response was not ok: ' + res.status);
