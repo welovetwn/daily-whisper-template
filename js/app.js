@@ -304,6 +304,14 @@ function shareImage(){
     ctx.font = 'bold 40px sans-serif';
     ctx.fillText( q.author, canvas.width / 2, canvas.height / 2 + textHeight / 2 + gap);
     
+    // 繪製右下角水印
+    ctx.save();
+    ctx.font = '30px sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.textAlign = 'right';
+    ctx.fillText('Daily Whisper🕯️', canvas.width - 40, canvas.height - 40);
+    ctx.restore();
+    
     const url = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = url; a.download = 'DailyWhisper.png';
