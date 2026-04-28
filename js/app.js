@@ -500,7 +500,7 @@ if('serviceWorker' in navigator){
 async function clearCacheAndReload() {
   const lastMod = document.lastModified;
   const deployInfo = lastMod ? `\n\n系統最後修改時間：${lastMod}` : '';
-  if (!confirm('確定要清除快取並重新載入？\n\n這將清除：\n- 頁面快取\n- 重新載入最新資料' + deployInfo)) {
+  if (!confirm('要清除快取並重新載入？\n\n這將清除：\n- 頁面快取\n- 重新載入最新資料\n' + deployInfo)) {
     return;
   }
   
