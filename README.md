@@ -14,6 +14,17 @@ A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, fav
 
 ## UI Improvements (2026-04-28)
 
+### Fixed: Share Image Background Box Too Wide
+- **Issue**: `shareImage()` 中文字背景框寬度固定為 950px，短語錄時框內留白過多
+- **Fix**: 改為根據實際文字行寬動態計算 `boxWidth`，範圍限制在 [400, 950] px
+- **Files Modified**: `js/app.js` (`shareImage()` 函數)
+- **Impact**: 短語錄的背景框不再過寬，視覺更協調
+
+### Added: Display Deploy Time in Cache Clear Dialog
+- **Feature**: `clearCacheAndReload()` 的 confirm 對話框中顯示 `document.lastModified` 時間
+- **Purpose**: 方便確認 web server 上是否為最新版本
+- **Files Modified**: `js/app.js` (`clearCacheAndReload()` 函數)
+
 ### Optimized: Background Image Loading Performance
 - **Change**: Removed 6 background images from the image pool to improve loading speed
 - **Files Modified**: `js/app.js` (images array)

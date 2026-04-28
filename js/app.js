@@ -351,11 +351,11 @@ function shareImage(){
     ctx.fillRect(0,0,canvas.width,canvas.height);
     
     // 繪製文字背景框（圓角半透明）
-    const boxWidth = 950;
     const boxPadding = 60;
     const lineHeight = 90;
     const authorHeight = 60;
     const gap = 40;
+    const maxTextWidth = 830;
     
     // 等待 Chiron GoRound TC 字體加載
     await document.fonts.load('bold 60px "Chiron GoRound TC"');
@@ -363,7 +363,19 @@ function shareImage(){
     
     // 計算文字行數來決定框的高度
     ctx.font = 'bold 60px "Chiron GoRound TC", sans-serif';
-    const lines = getTextLines(ctx, q.text, boxWidth - boxPadding * 2);
+    const lines = getTextLines(ctx, q.text, maxTextWidth);
+    
+    // 根據實際文字行寬動態計算背景框寬度
+    let maxLineWidth = 0;
+    lines.forEach(line => {
+      const w = ctx.measureText(line).width;
+      if (w > maxLineWidth) maxLineWidth = w;
+    });
+    ctx.font = 'bold 40px "Chiron GoRound TC", sans-serif';
+    const authorWidth = ctx.measureText(q.author || '').width;
+    const contentMaxWidth = Math.max(maxLineWidth, authorWidth);
+    const boxWidth = Math.max(Math.min(contentMaxWidth + boxPadding * 2, 950), 400);
+    
     const textHeight = lines.length * lineHeight;
     const boxHeight = textHeight + authorHeight + gap + boxPadding * 2;
     const boxX = (canvas.width - boxWidth) / 2;
@@ -380,7 +392,7 @@ function shareImage(){
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 60px "Chiron GoRound TC", sans-serif';
     ctx.textAlign = 'center';
-    wrapText(ctx, q.text, canvas.width / 2, canvas.height / 2 - authorHeight / 2, boxWidth - boxPadding * 2, lineHeight);
+    wrapText(ctx, q.text, canvas.width / 2, canvas.height / 2 - authorHeight / 2, maxTextWidth, lineHeight);
     ctx.font = 'bold 40px "Chiron GoRound TC", sans-serif';
     ctx.fillText( q.author, canvas.width / 2, canvas.height / 2 + textHeight / 2 + gap);
     
@@ -486,7 +498,9 @@ if('serviceWorker' in navigator){
 }
 // 清除快取並重新載入
 async function clearCacheAndReload() {
-  if (!confirm('確定要清除快取並重新載入？\n\n這將清除：\n- 頁面快取\n- 重新載入最新資料')) {
+  const lastMod = document.lastModified;
+  const deployInfo = lastMod ? `\n\n系統最後修改時間：${lastMod}` : '';
+  if (!confirm('確定要清除快取並重新載入？\n\n這將清除：\n- 頁面快取\n- 重新載入最新資料' + deployInfo)) {
     return;
   }
   
