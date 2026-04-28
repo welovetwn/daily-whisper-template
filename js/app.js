@@ -352,7 +352,7 @@ function shareImage(){
     
     // 繪製文字背景框（圓角半透明）
     const boxPadding = 60;
-    const lineHeight = 90;
+    const lineHeight = 80;
     const authorHeight = 60;
     const gap = 40;
     const maxTextWidth = 830;
