@@ -1,17 +1,128 @@
+
 let quotes=[], currentIndex=0;
 const images = [
+  // Mountains & Lakes
+  "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
+  "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+  "https://images.unsplash.com/photo-1604440095301-4ec2f9230155",
+  "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg",
+  "https://images.pexels.com/photos/355241/pexels-photo-355241.jpeg",
+  "https://images.pexels.com/photos/326278/pexels-photo-326278.jpeg",
+  "https://images.pexels.com/photos/23973445/pexels-photo-23973445.jpeg",
+  "https://images.pexels.com/photos/13873466/pexels-photo-13873466.jpeg",
+
+  // Forest & Trees
+  "https://images.unsplash.com/photo-1441974231531-c6227db76b6e",
+  "https://images.unsplash.com/photo-1506765515384-028b60a970df",
+  "https://images.pexels.com/photos/33279929/pexels-photo-33279929.jpeg",
+  "https://images.pexels.com/photos/164008/pexels-photo-164008.jpeg",
+  "https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg",
+  "https://images.pexels.com/photos/32076508/pexels-photo-32076508.jpeg",
+  "https://images.pexels.com/photos/6406918/pexels-photo-6406918.jpeg",
+  "https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg",
+
+  // Ocean & Beach
+  "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+  "https://images.pexels.com/photos/12987464/pexels-photo-12987464.jpeg",
+  "https://images.pexels.com/photos/248797/pexels-photo-248797.jpeg",
+  "https://images.pexels.com/photos/533923/pexels-photo-533923.jpeg",
+  "https://images.pexels.com/photos/33374145/pexels-photo-33374145.jpeg",
+  "https://images.pexels.com/photos/12925698/pexels-photo-12925698.jpeg",
+  "https://images.pexels.com/photos/1001682/pexels-photo-1001682.jpeg",
+  "https://images.pexels.com/photos/457882/pexels-photo-457882.jpeg",
+
+  // Sunset & Sunrise
+  "https://images.pexels.com/photos/728841/pexels-photo-728841.jpeg",
+  "https://images.pexels.com/photos/34021102/pexels-photo-34021102.jpeg",
+  "https://images.pexels.com/photos/462353/pexels-photo-462353.jpeg",
+  "https://images.pexels.com/photos/35461529/pexels-photo-35461529.jpeg",
+  "https://images.pexels.com/photos/30685474/pexels-photo-30685474.jpeg",
+  "https://images.pexels.com/photos/19611627/pexels-photo-19611627.jpeg",
+  "https://images.pexels.com/photos/247599/pexels-photo-247599.jpeg",
+
+  // Scenery & Nature
+  "https://images.pexels.com/photos/34625026/pexels-photo-34625026.jpeg",
+  "https://images.pexels.com/photos/10731758/pexels-photo-10731758.jpeg",
+  "https://images.pexels.com/photos/29686303/pexels-photo-29686303.jpeg",
+  "https://images.pexels.com/photos/414171/pexels-photo-414171.jpeg",
+  "https://images.pexels.com/photos/2559941/pexels-photo-2559941.jpeg",
+  "https://images.pexels.com/photos/36850515/pexels-photo-36850515.jpeg",
+
+  // Clouds & Skies
+  "https://images.pexels.com/photos/246230/pexels-photo-246230.png",
+  "https://images.unsplash.com/photo-1448375240586-882707db888b",
+  "https://images.pexels.com/photos/9854061/pexels-photo-9854061.jpeg",
+  "https://images.pexels.com/photos/531880/pexels-photo-531880.jpeg",
+  "https://images.pexels.com/photos/34210398/pexels-photo-34210398.jpeg",
+  "https://images.pexels.com/photos/13768451/pexels-photo-13768451.jpeg",
+  "https://images.pexels.com/photos/29413967/pexels-photo-29413967.jpeg",
+
+  // Mountains Extended
+  "https://images.pexels.com/photos/33130105/pexels-photo-33130105.jpeg",
+  "https://images.pexels.com/photos/14672474/pexels-photo-14672474.jpeg",
+  "https://images.pexels.com/photos/16654642/pexels-photo-16654642.jpeg",
+  "https://images.pexels.com/photos/35900181/pexels-photo-35900181.jpeg",
+  "https://images.pexels.com/photos/17881053/pexels-photo-17881053.jpeg",
+  "https://images.pexels.com/photos/20077185/pexels-photo-20077185.jpeg",
+
+  // More scenic variety
+  "https://images.pexels.com/photos/1410232/pexels-photo-1410232.jpeg",
+  "https://images.pexels.com/photos/29222109/pexels-photo-29222109.jpeg",
+  "https://images.pexels.com/photos/34289149/pexels-photo-34289149.jpeg",
+  "https://images.pexels.com/photos/13733430/pexels-photo-13733430.jpeg",
+  "https://images.pexels.com/photos/347140/pexels-photo-347140.jpeg",
+
+  // Even more landscapes
+  "https://images.pexels.com/photos/8787041/pexels-photo-8787041.jpeg",
+  "https://images.pexels.com/photos/31986352/pexels-photo-31986352.jpeg",
+  "https://images.pexels.com/photos/1770809/pexels-photo-1770809.jpeg",
+  "https://images.pexels.com/photos/7694761/pexels-photo-7694761.jpeg",
+  "https://images.pexels.com/photos/9957253/pexels-photo-9957253.jpeg",
+  "https://images.pexels.com/photos/32392574/pexels-photo-32392574.jpeg",
+
+  // others staff
+  "https://images.unsplash.com/photo-1749834182231-0bc0c7984786?q=60",
+  "https://images.unsplash.com/photo-1756916475341-ef71802fe5d3?q=60",
+  "https://images.unsplash.com/photo-1756758005190-92941d91b8b2?q=60",
+  "https://images.unsplash.com/photo-1757161969591-874937df864b?q=60",
+  "https://images.unsplash.com/photo-1757137911040-c9d81879b212?q=60",
+  "https://images.unsplash.com/photo-1756758006047-efc2f2b7d493?q=60",
+  "https://images.unsplash.com/photo-1756669086471-58531cdeb0c7?q=60",
+  "https://images.unsplash.com/photo-1756768937629-febe4bf15fcf?q=60",
+  "https://images.unsplash.com/photo-1756680967015-435aa03c1367?q=60",
+  "https://images.unsplash.com/photo-1754620731794-f16ab70963ec?q=60",
+  "https://images.unsplash.com/photo-1755371033904-21dd8a9d002b?q=60",
+  "https://images.unsplash.com/photo-1741557571786-e922da981949?q=60",
+  "https://images.unsplash.com/photo-1749920937484-a61e6a9566a9?q=60",
+  "https://images.unsplash.com/photo-1755366204962-3cb4bc8452b1?q=60",
+  "https://images.unsplash.com/photo-1754764464593-638adca1eb4f?q=60",
+  "https://images.unsplash.com/photo-1749627995669-4d4dda3a9c1d?q=60",
+  "https://images.unsplash.com/photo-1750779941037-b3cbfde22acb?q=60",
+  "https://images.unsplash.com/photo-1750779941284-09ee2d6a619c?q=60",
+  "https://images.unsplash.com/photo-1749334927556-d9fae29d0637?q=60",
+  "https://images.unsplash.com/photo-1750126833705-ba98013f16f3?q=60",
+  "https://images.unsplash.com/photo-1542997830-49fc838e4c61?q=60",
+  "https://images.unsplash.com/photo-1754273844587-f6071584597b?q=60",
+  "https://images.unsplash.com/photo-1754772512355-299e9c2b1b76?q=60",
+  "https://images.unsplash.com/photo-1522030865324-4062412a2023?q=60",
   "https://images.unsplash.com/photo-1751441839591-119ba895ce19?q=60",
   "https://images.unsplash.com/photo-1752035680973-79d3836f317a?q=60",
   "https://images.unsplash.com/photo-1750711642160-efc6e052751a?q=60",
   "https://images.unsplash.com/photo-1470093014438-2ede8d7a4818?q=60",
   "https://images.unsplash.com/photo-1749259560252-ca132892004f?q=60",
   "https://images.unsplash.com/photo-1745669754254-c30c98e5f8b1?q=60",
+  "https://images.unsplash.com/photo-1744671904209-671573b35fd9?q=60",
+  "https://images.unsplash.com/photo-1422363119751-1d2b703a7546?q=60",
+  "https://images.unsplash.com/photo-1745750747234-9584cbd65358?q=60",
+  "https://images.unsplash.com/photo-1503919483171-9ffc1debc390?q=60",
   "https://images.unsplash.com/photo-1485808269728-77bb07c059a8?q=60",
   "https://plus.unsplash.com/premium_photo-1681825187840-74ac15b37e6b?q=60",
   "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=60",
   "https://images.unsplash.com/photo-1457139621581-298d1801c832?q=60",
   "https://images.unsplash.com/photo-1742845918430-c6093f93f740?q=60",
   "https://images.unsplash.com/photo-1610131635230-9c4afb6238b7?q=60",
+  "https://images.unsplash.com/photo-1595744080904-82b7732e8bf0?q=60",
+  "https://images.unsplash.com/photo-1532362091753-d53721a3e82c?q=60",
   "https://images.unsplash.com/photo-1470432581262-e7880e8fe79a?q=60",
   "https://images.unsplash.com/photo-1454486837617-ce8e1ba5ebfe?q=60",
   "https://images.unsplash.com/photo-1544911845-1f34a3eb46b1?q=60",
@@ -242,9 +353,9 @@ function shareImage(){
     // 繪製文字背景框（圓角半透明）
     const boxWidth = 950;
     const boxPadding = 60;
-    const lineHeight = 80;
+    const lineHeight = 90;
     const authorHeight = 60;
-    const gap = 30;
+    const gap = 40;
     
     // 等待 Chiron GoRound TC 字體加載
     await document.fonts.load('bold 60px "Chiron GoRound TC"');
