@@ -12,6 +12,14 @@ A minimal, aesthetic daily quote web app with PWA, Google Sheets submission, fav
 - Share images (IG Story)
 - PWA (installable)
 
+## UI Improvements (2026-04-28)
+
+### Optimized: Background Image Loading Performance
+- **Change**: Removed 6 background images from the image pool to improve loading speed
+- **Files Modified**: `js/app.js` (images array)
+- **Impact**: Faster initial page load and smoother slide transitions
+- **Details**: Removed duplicate and less optimal images while maintaining visual variety
+
 ## UI Improvements (2025-04-13)
 
 ### Improved: Multi-Author Support in Tag Cloud

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖片載入性能測試</title>
+    <style>
+        body {
+            font-family: 'Chiron GoRound TC', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .image-item {
+            position: relative;
+            padding-bottom: 100%;
+            background: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .image-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+        }
+        .loaded {
+            border: 2px solid #4caf50;
+        }
+        .error {
+            border: 2px solid #f44336;
+        }
+        button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #1976d2;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>🖼️ Daily Whisper - 圖片載入性能測試</h1>
+    
+    <div class="test-container">
+        <h2>測試結果</h2>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="totalImages">0</div>
+                <div class="stat-label">總圖片數量</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="loadedImages">0</div>
+                <div class="stat-label">已載入</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="errorImages">0</div>
+                <div class="stat-label">載入失敗</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="loadTime">0ms</div>
+                <div class="stat-label">總載入時間</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="avgTime">0ms</div>
+                <div class="stat-label">平均載入時間</div>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        
+        <button onclick="startTest()">開始測試</button>
+        <button onclick="clearResults()">清除結果</button>
+    </div>
+    
+    <div class="test-container">
+        <h2>圖片載入狀態</h2>
+        <div class="image-grid" id="imageGrid"></div>
+    </div>
+
+    <script>
+        // 從 app.js 複製的圖片陣列（修改後的版本）
+        const images = [
+          "https://images.unsplash.com/photo-1751441839591-119ba895ce19?q=60",
+          "https://images.unsplash.com/photo-1752035680973-79d3836f317a?q=60",
+          "https://images.unsplash.com/photo-1750711642160-efc6e052751a?q=60",
+          "https://images.unsplash.com/photo-1470093014438-2ede8d7a4818?q=60",
+          "https://images.unsplash.com/photo-1749259560252-ca132892004f?q=60",
+          "https://images.unsplash.com/photo-1745669754254-c30c98e5f8b1?q=60",
+          "https://images.unsplash.com/photo-1485808269728-77bb07c059a8?q=60",
+          "https://plus.unsplash.com/premium_photo-1681825187840-74ac15b37e6b?q=60",
+          "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=60",
+          "https://images.unsplash.com/photo-1457139621581-298d1801c832?q=60",
+          "https://images.unsplash.com/photo-1742845918430-c6093f93f740?q=60",
+          "https://images.unsplash.com/photo-1610131635230-9c4afb6238b7?q=60",
+          "https://images.unsplash.com/photo-1470432581262-e7880e8fe79a?q=60",
+          "https://images.unsplash.com/photo-1454486837617-ce8e1ba5ebfe?q=60",
+          "https://images.unsplash.com/photo-1544911845-1f34a3eb46b1?q=60",
+          "https://images.unsplash.com/photo-1514519273132-6a1abd48302c?q=60",
+          "https://images.unsplash.com/photo-1464660439080-b79116909ce7?q=60",
+          "https://images.unsplash.com/photo-1516655855035-d5215bcb5604?q=60"
+        ];
+
+        let startTime;
+        let loadTimes = [];
+        let loadedCount = 0;
+        let errorCount = 0;
+
+        function initImageGrid() {
+            const grid = document.getElementById('imageGrid');
+            grid.innerHTML = '';
+            
+            images.forEach((url, index) => {
+                const item = document.createElement('div');
+                item.className = 'image-item';
+                item.id = `image-${index}`;
+                
+                const loading = document.createElement('div');
+                loading.className = 'loading';
+                loading.textContent = '載入中...';
+                
+                item.appendChild(loading);
+                grid.appendChild(item);
+            });
+            
+            document.getElementById('totalImages').textContent = images.length;
+        }
+
+        function loadImage(url, index) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                const loadStartTime = performance.now();
+                
+                img.onload = () => {
+                    const loadEndTime = performance.now();
+                    const loadTime = loadEndTime - loadStartTime;
+                    loadTimes.push(loadTime);
+                    
+                    const item = document.getElementById(`image-${index}`);
+                    item.innerHTML = '';
+                    item.appendChild(img);
+                    item.classList.add('loaded');
+                    
+                    loadedCount++;
+                    updateStats();
+                    resolve();
+                };
+                
+                img.onerror = () => {
+                    const item = document.getElementById(`image-${index}`);
+                    item.classList.add('error');
+                    item.querySelector('.loading').textContent = '載入失敗';
+                    
+                    errorCount++;
+                    updateStats();
+                    resolve();
+                };
+                
+                img.src = url;
+            });
+        }
+
+        async function startTest() {
+            startTime = performance.now();
+            loadedCount = 0;
+            errorCount = 0;
+            loadTimes = [];
+            
+            initImageGrid();
+            
+            const promises = images.map((url, index) => loadImage(url, index));
+            await Promise.all(promises);
+            
+            const endTime = performance.now();
+            const totalTime = endTime - startTime;
+            
+            document.getElementById('loadTime').textContent = Math.round(totalTime) + 'ms';
+            
+            if (loadTimes.length > 0) {
+                const avgTime = loadTimes.reduce((a, b) => a + b, 0) / loadTimes.length;
+                document.getElementById('avgTime').textContent = Math.round(avgTime) + 'ms';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('loadedImages').textContent = loadedCount;
+            document.getElementById('errorImages').textContent = errorCount;
+            
+            const progress = (loadedCount + errorCount) / images.length * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function clearResults() {
+            document.getElementById('loadedImages').textContent = '0';
+            document.getElementById('errorImages').textContent = '0';
+            document.getElementById('loadTime').textContent = '0ms';
+            document.getElementById('avgTime').textContent = '0ms';
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('imageGrid').innerHTML = '';
+        }
+
+        // 初始化
+        initImageGrid();
+    </script>
+</body>
+</html>
