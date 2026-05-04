@@ -12,12 +12,31 @@
  * 7. 部署 → 建立新部署 → 網頁應用程式
  * 8. 執行身分：我 / 存取權限：任何人
  * 9. 複製網頁應用程式 URL，更新到 js/app.js 中的 IMAGES_API_URL
+ *    注意：確保 Apps Script 已綁定到 Google Sheets（點擊「專案設定」→「試算表」）
  */
 
 // 讀取所有圖片 (GET) - 函式名稱改為 getImages 避免衝突
 function getImages(e) {
   try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Images');
+    // 嘗試取得目前綁定的試算表，如果沒有則從參數取得
+    var spreadsheet;
+    try {
+      spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    } catch (e) {
+      // 如果沒有綁定，嘗試從 ssId 參數取得
+      var ssId = e.parameter.ssId;
+      if (ssId) {
+        spreadsheet = SpreadsheetApp.openById(ssId);
+      } else {
+        throw new Error('No spreadsheet bound. Please add ?ssId=YOUR_SPREADSHEET_ID to the URL');
+      }
+    }
+    
+    if (!spreadsheet) {
+      throw new Error('Cannot access spreadsheet');
+    }
+    
+    var sheet = spreadsheet.getSheetByName('Images');
     
     if (!sheet) {
       return ContentService.createTextOutput(JSON.stringify({
@@ -34,8 +53,11 @@ function getImages(e) {
       var category = data[i][1] || '';
       var active = data[i][2];
       
+      // 支援 TRUE (布林) 或 "TRUE" (字串)
+      var isActive = (active === true || active === 'TRUE' || active === true || active == 'true');
+      
       // 只包含 active 為 TRUE 且有 url 的圖片
-      if (url && active === true) {
+      if (url && isActive) {
         images.push({
           url: url.toString().trim(),
           category: category.toString().trim()
