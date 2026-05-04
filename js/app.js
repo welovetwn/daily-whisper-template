@@ -3,7 +3,7 @@ let quotes=[], currentIndex=0;
 let imagesData=[];
 
 // Google Sheets Images API URL - 請更新為你的部署網址
-const IMAGES_API_URL = 'https://script.google.com/macros/s/AKfycbwLedxkaYb1p7FZlYsjIB92N5YT7hDTyPCxruJawWpQSjy9W_bhp0uCOrlHIEtGV2ugQQ/exec';
+const IMAGES_API_URL = 'https://script.google.com/macros/library/d/1u7xPQrDgJw8J1Wxnd2CTxEhD4TDlSLjjPfboBghkGaR30Im2WwExei4X/3';
 
 // 備用圖片（API 載入失敗時使用）
 const FALLBACK_IMAGES = [
