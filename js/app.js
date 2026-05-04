@@ -67,7 +67,7 @@ async function loadQuotes(){
       // 隱藏 Splash Screen
       var splash = document.getElementById('splash');
       if (splash) {
-        splash.style.opacity = '0';
+        splash.classList.add('hidden');
         setTimeout(function() { splash.style.display = 'none'; }, 500);
       }
       return;
@@ -87,7 +87,7 @@ async function loadQuotes(){
     // 隱藏 Splash Screen
     var splash = document.getElementById('splash');
     if (splash) {
-      splash.style.opacity = '0';
+      splash.classList.add('hidden');
       setTimeout(function() { splash.style.display = 'none'; }, 500);
     }
   } catch (error) {
