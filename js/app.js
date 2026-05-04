@@ -453,9 +453,10 @@ async function clearCacheAndReload() {
   }
 }
 
-// 同時載入語錄和圖片資料
+// 先載入圖片，再載入語錄（確保圖片資料可用後才渲染）
 async function loadData() {
-  await Promise.all([loadImages(), loadQuotes()]);
+  await loadImages();  // 先載入圖片
+  await loadQuotes();  // 再載入語錄並渲染
 }
 
 window.onload = loadData;
