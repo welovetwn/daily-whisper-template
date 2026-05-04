@@ -63,6 +63,13 @@ async function loadQuotes(){
         tags: []
       }];
       createSlides(quotes);
+      
+      // 隱藏 Splash Screen
+      var splash = document.getElementById('splash');
+      if (splash) {
+        splash.style.opacity = '0';
+        setTimeout(function() { splash.style.display = 'none'; }, 500);
+      }
       return;
     }
     
@@ -76,6 +83,13 @@ async function loadQuotes(){
       throw new Error('No quotes data received');
     }
     createSlides(quotes);
+    
+    // 隱藏 Splash Screen
+    var splash = document.getElementById('splash');
+    if (splash) {
+      splash.style.opacity = '0';
+      setTimeout(function() { splash.style.display = 'none'; }, 500);
+    }
   } catch (error) {
     console.error('Failed to load quotes:', error);
     const container = document.getElementById('container');

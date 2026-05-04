@@ -22,6 +22,16 @@
 </style>
 </head>
 <body>
+<!-- Splash Screen -->
+<div id='splash' style='position:fixed;top:0;left:0;width:100%;height:100%;background:#1a1a1a;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;transition:opacity 0.5s;'>
+  <div style="font-family: 'Sriracha', cursive; font-size: 32px; color: #fff; margin-bottom: 20px;">Daily Whisper🕯️</div>
+  <div style='width:40px;height:40px;border:3px solid #333;border-top:3px solid #fff;border-radius:50%;animation:spin 1s linear infinite;'></div>
+  <div style="font-family: 'Chiron GoRound TC', sans-serif; color: #666; margin-top: 20px; font-size: 14px;">載入中...</div>
+</div>
+<style>
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+
 <!-- 預加載芫荽體 -->
 <span style="font-family: 'Iansui', sans-serif; position: absolute; visibility: hidden;">預載</span>
 <!-- 預加載 Sriracha -->
