@@ -11,19 +11,44 @@
  * 7. 複製網頁應用程式 URL，更新到 submit.html
  */
 
-// 讀取所有語錄 (GET)
+// 讀取所有語錄 (GET) - 排序: createDate Desc + ROW Desc
 function doGet() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = sheet.getDataRange().getValues();
   var json = [];
+  
   for(var i=1; i<data.length; i++){
     json.push({
       text: data[i][0],
       author: data[i][1],
-      tags: data[i][2] ? data[i][2].toString().split(',').map(s=>s.trim()) : []
+      tags: data[i][2] ? data[i][2].toString().split(',').map(s=>s.trim()) : [],
+      row: i  // 儲存原始列號
     });
   }
-  return ContentService.createTextOutput(JSON.stringify(json))
+  
+  // 排序: createDate Desc, 再按 ROW Desc
+  json.sort(function(a, b) {
+    var dateA = data[a.row][3] || '';  // createDate 在第4欄 (index 3)
+    var dateB = data[b.row][3] || '';
+    
+    // 先按 createDate Desc
+    if (dateA !== dateB) {
+      return dateB.localeCompare(dateA);
+    }
+    // 再按 ROW Desc
+    return b.row - a.row;
+  });
+  
+  // 移除 row 欄位後回傳
+  var result = json.map(function(item) {
+    return {
+      text: item.text,
+      author: item.author,
+      tags: item.tags
+    };
+  });
+  
+  return ContentService.createTextOutput(JSON.stringify(result))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
